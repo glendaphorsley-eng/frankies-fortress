@@ -295,11 +295,11 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
     <div class="sheet">
       <div class="field"><label for="c-family">How should the family be named?</label>
-        <input type="text" id="c-family" value="The Rivera family">
+        <input type="text" id="c-family" placeholder="For example: The R. family">
         <span class="small muted">First names or a last initial are fine, like "Maria & the kids" or "The R. family."</span>
       </div>
       <div class="field"><label for="c-organizer">Organizer's name <span class="muted small">(optional)</span></label>
-        <input type="text" id="c-organizer" value="Dana, a family friend">
+        <input type="text" id="c-organizer" placeholder="For example: Dana, a family friend">
       </div>
     </div>
 
@@ -342,12 +342,13 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div class="sheet">
       <span class="label">Privacy</span>
       <label class="check"><input type="checkbox" id="c-nocontact" checked> <span>No-contact drop-offs: leave things at the door</span></label>
-      <div class="field"><label for="c-dropoff">Drop-off instructions</label><input type="text" id="c-dropoff" value="Cooler on the front porch. Please don't knock."></div>
+      <div class="field"><label for="c-dropoff">Drop-off instructions</label><input type="text" id="c-dropoff" placeholder="For example: Cooler on the front porch. Please don't knock."></div>
       <label class="check"><input type="checkbox" id="c-passcode" checked> <span>Require a passcode to open the page</span></label>
       <label class="check"><input type="checkbox" id="c-names"> <span>Let helpers see each other's names</span></label>
       <p class="small muted">The family's address is only shown to someone after they sign up to drop something off.</p>
     </div>
 
+    <p class="small" id="c-msg" style="color:var(--hearth-ink)"></p>
     <div class="row"><button class="hearth" id="c-preview">Preview the Fortress</button></div>
   </section>
 
@@ -734,6 +735,12 @@ function showPreview() {
   useState(previewState);
 }
 $("c-preview").onclick = () => {
+  if (!$("c-family").value.trim()) {
+    $("c-msg").textContent = "Please add a name for the family first. First names or an initial are fine.";
+    $("c-family").focus();
+    return;
+  }
+  $("c-msg").textContent = "";
   saveDraft();
   buildPreview();
   if (location.hash === "#preview") route(); else location.hash = "preview";
@@ -837,7 +844,9 @@ const saveDraftSoon = () => { clearTimeout(draftTimer); draftTimer = setTimeout(
   if (!d) return;
   const check = (name, v) => { const el = v && document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
   check("c-role", d.role); check("c-season", d.season);
-  ["family", "organizer", "custom", "dropoff"].forEach((k) => { if (typeof d[k] === "string") $("c-" + k).value = d[k]; });
+  // Older drafts may still hold the sample text that used to be pre-filled; leave those boxes empty.
+  const oldSamples = ["The Rivera family", "Dana, a family friend", "Cooler on the front porch. Please don't knock."];
+  ["family", "organizer", "custom", "dropoff"].forEach((k) => { if (typeof d[k] === "string" && !oldSamples.includes(d[k])) $("c-" + k).value = d[k]; });
   $("c-nocontact").checked = !!d.nocontact; $("c-passcode").checked = !!d.passcode; $("c-names").checked = !!d.names;
   if (Array.isArray(d.helps)) {
     selectedHelps.clear(); d.helps.forEach((h) => HELP[h] && selectedHelps.add(h));
