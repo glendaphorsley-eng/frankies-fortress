@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+Sans+SC:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap">
 <style>
 /* Layout: a single sheltered column inside warm stone walls; hearth light glows from the fortress doorway at the top and warms each section below. */
 :root {
@@ -10,9 +10,9 @@
   --accent: #2F5244; --accent-ink: #F6F2EA; --accent-soft: #DCE5DE;
   --hearth: #B8661E; --hearth-ink: #8A4710; --hearth-soft: #F3E2CF; --glow: rgba(240, 160, 70, 0.42);
   --stone1: #CFC6B8; --stone2: #BFB4A4; --stone3: #ADA191; --mortar: #8E8374;
-  --display: "Alegreya", Georgia, "Times New Roman", serif;
-  --label: "Alegreya Sans SC", "Segoe UI", system-ui, sans-serif;
-  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --label: "Inter", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
   --r: 12px;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
@@ -29,7 +29,7 @@
 }
 
 * { box-sizing: border-box; }
-body { background: radial-gradient(130% 40% at 50% 0%, var(--glow), transparent 70%) no-repeat, var(--bg); color: var(--ink); font: 17px/1.6 var(--body); }
+body { background: radial-gradient(130% 40% at 50% 0%, var(--glow), transparent 70%) no-repeat, var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
 .wrap {
   max-width: 600px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -38,14 +38,14 @@ body { background: radial-gradient(130% 40% at 50% 0%, var(--glow), transparent 
   display: flex; flex-direction: column; gap: 22px;
 }
 h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; }
-h1 { font-size: 2.6rem; font-weight: 700; }
-h2 { font-size: 1.75rem; font-weight: 700; }
-h3 { font-size: 1.2rem; font-weight: 700; }
+h1 { font-size: 2.6rem; font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: 1.8rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
 p { margin: 0; }
 a { color: var(--accent); }
 .muted { color: var(--muted); }
 .small { font-size: 0.9rem; }
-.label { font-family: var(--label); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--hearth-ink); }
+.label { font-family: var(--label); font-weight: 700; font-size: 0.76rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--hearth-ink); }
 .stack { display: flex; flex-direction: column; gap: 12px; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 :focus-visible { outline: 3px solid var(--hearth); outline-offset: 2px; }
@@ -104,7 +104,7 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .badge { font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
 .day { display: flex; flex-direction: column; gap: 8px; }
-.day-title { font-family: var(--label); font-weight: 700; letter-spacing: 0.05em; color: var(--muted); font-size: 0.95rem; }
+.day-title { font-family: var(--label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-size: 0.76rem; }
 .slot { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--hearth); border-radius: 10px; padding: 12px 14px; }
 .slot > div { min-width: 0; }
 .slot.taken { border-left-color: var(--accent); }
