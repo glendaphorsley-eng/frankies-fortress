@@ -376,7 +376,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
   <!-- GUIDE -->
   <section data-view="guide" class="stack" hidden>
-    <div class="topbar"><a class="back" href="#fortress">‹ Back</a><span class="label">How to help</span></div>
+    <div class="topbar"><a class="back" href="#home" data-back>‹ Back</a><span class="label">How to help</span></div>
     <div class="stack" style="gap:6px">
       <h2>How to support a family without making it harder</h2>
       <p class="muted">Families facing mental illness, addiction or a loss like suicide or overdose often carry shame that isn't theirs to carry. The kindest help is steady, practical and asks for nothing back.</p>
@@ -592,7 +592,7 @@ function renderFortress() {
   $("f-banner").innerHTML = F.example
     ? `<div class="banner"><strong>Example page.</strong> The family, names and details are made up. Try signing up or leaving a note.
         <div class="chips" style="margin-top:8px"><button type="button" class="chip" data-season="hard" aria-pressed="${F.season === "hard"}">A hard season</button><button type="button" class="chip" data-season="loss" aria-pressed="${F.season === "loss"}">After a loss</button></div></div>`
-    : `<div class="banner"><strong>This is a preview of your Fortress.</strong> Nothing is saved yet. <a href="#create">Keep editing</a></div>`;
+    : `<div class="banner"><strong>This is a preview of your Fortress.</strong> Your draft is saved on this device only, and nobody else can see it yet. <a href="#create">Keep editing</a></div>`;
   const badges = ["Private link"];
   if (F.passcode) badges.push("Passcode protected");
   if (F.noContact) badges.push("No-contact drop-offs");
@@ -632,7 +632,7 @@ function renderFortress() {
 
 $("f-banner").addEventListener("click", (e) => {
   const s = e.target.dataset.season; if (!s || !F.example) return;
-  F = exampleFortress(s); slots = makeSlots(F.helps); notes = exampleNotes(s); renderFortress();
+  exSeason = s; showExample(true);
 });
 $("f-slots").addEventListener("click", (e) => { const id = e.target.dataset.slot; if (id) openSignup(slots.find((s) => s.id === id)); });
 $("f-ongoing").addEventListener("click", (e) => {
@@ -707,20 +707,36 @@ $("c-helps").addEventListener("click", (e) => {
   selectedHelps.has(k) ? selectedHelps.delete(k) : selectedHelps.add(k);
   e.target.setAttribute("aria-pressed", selectedHelps.has(k));
 });
-$("c-preview").onclick = () => {
+// The example family and your own preview are kept apart, so neither can replace the other.
+let exSeason = "hard", exampleState = null, previewState = null;
+function useState(st) { ({ F, slots, notes, prayers, prayed } = st); renderFortress(); }
+function saveCurrent() { const st = { F, slots, notes, prayers, prayed }; F.example ? (exampleState = st) : (previewState = st); }
+function showExample(reset) {
+  if (!F.example) saveCurrent();
+  if (reset || !exampleState) { const ex = exampleFortress(exSeason); exampleState = { F: ex, slots: makeSlots(ex.helps), notes: exampleNotes(exSeason), prayers: 6, prayed: false }; }
+  useState(exampleState);
+}
+function buildPreview() {
   const season = document.querySelector('input[name="c-season"]:checked').value;
-  const tpl = document.querySelector('input[name="c-tpl"]:checked').value;
-  F = {
+  const tpl = document.querySelector('input[name="c-tpl"]:checked')?.value || "0";
+  const pf = {
     example: false, season,
     family: $("c-family").value.trim().slice(0, 60), organizer: $("c-organizer").value.trim().slice(0, 60),
     message: tpl === "custom" ? $("c-custom").value.trim().slice(0, 400) : TEMPLATES[season][+tpl],
     helps: [...selectedHelps], noContact: $("c-nocontact").checked, dropoff: $("c-dropoff").value.trim().slice(0, 200),
     passcode: $("c-passcode").checked, showNames: $("c-names").checked, address: "",
   };
-  slots = expandNeeds();
-  notes = []; prayers = 0; prayed = false;
-  renderFortress();
-  location.hash = "fortress";
+  previewState = { F: pf, slots: expandNeeds(), notes: [], prayers: 0, prayed: false };
+}
+function showPreview() {
+  if (F.example) saveCurrent();
+  if (!previewState) buildPreview();
+  useState(previewState);
+}
+$("c-preview").onclick = () => {
+  saveDraft();
+  buildPreview();
+  if (location.hash === "#preview") route(); else location.hash = "preview";
 };
 
 /* ---------- shop ---------- */
@@ -800,6 +816,40 @@ $("nd-add").onclick = () => {
 $("nd-list").addEventListener("click", (e) => { const i = e.target.dataset.remove; if (i != null) { needs.splice(+i, 1); renderNeeds(); } });
 renderNeeds();
 
+/* ---------- draft: remember what was entered in Start a Fortress (this device only) ---------- */
+function saveDraft() {
+  const d = {
+    role: document.querySelector('input[name="c-role"]:checked')?.value,
+    season: document.querySelector('input[name="c-season"]:checked')?.value,
+    tpl: document.querySelector('input[name="c-tpl"]:checked')?.value,
+    family: $("c-family").value, organizer: $("c-organizer").value, custom: $("c-custom").value,
+    helps: [...selectedHelps], nocontact: $("c-nocontact").checked, dropoff: $("c-dropoff").value,
+    passcode: $("c-passcode").checked, names: $("c-names").checked, needs,
+  };
+  try { localStorage.setItem("ff.draft", JSON.stringify(d)); } catch (e) {}
+}
+let draftTimer = null;
+const saveDraftSoon = () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 300); };
+["input", "change", "click"].forEach((ev) => document.querySelector('[data-view="create"]').addEventListener(ev, saveDraftSoon));
+(function loadDraft() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem("ff.draft") || "null"); } catch (e) {}
+  if (!d) return;
+  const check = (name, v) => { const el = v && document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
+  check("c-role", d.role); check("c-season", d.season);
+  ["family", "organizer", "custom", "dropoff"].forEach((k) => { if (typeof d[k] === "string") $("c-" + k).value = d[k]; });
+  $("c-nocontact").checked = !!d.nocontact; $("c-passcode").checked = !!d.passcode; $("c-names").checked = !!d.names;
+  if (Array.isArray(d.helps)) {
+    selectedHelps.clear(); d.helps.forEach((h) => HELP[h] && selectedHelps.add(h));
+    document.querySelectorAll("[data-help]").forEach((b) => b.setAttribute("aria-pressed", selectedHelps.has(b.dataset.help)));
+  }
+  if (Array.isArray(d.needs)) { needs.length = 0; d.needs.filter((n) => n && n.what && n.date && HELP[n.type]).forEach((n) => needs.push(n)); renderNeeds(); }
+  renderTemplates(); check("c-tpl", d.tpl); $("c-custom-wrap").hidden = d.tpl !== "custom";
+})();
+
+// "Back" links return to wherever the visitor came from.
+document.querySelectorAll("[data-back]").forEach((a) => a.addEventListener("click", (e) => { if (history.length > 1) { e.preventDefault(); history.back(); } }));
+
 /* ---------- header menu ---------- */
 function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
 $("menu-btn").onclick = (e) => { e.stopPropagation(); setMenu($("menu").hidden); };
@@ -810,7 +860,11 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(fa
 const views = [...document.querySelectorAll("[data-view]")];
 function route() {
   const name = location.hash.slice(1);
-  const target = views.some((v) => v.dataset.view === name) ? name : "home";
+  // "#fortress" is the example family; "#preview" is your own Fortress. Both use the same page layout.
+  if (name === "fortress") showExample(false);
+  if (name === "preview") showPreview();
+  const view = name === "preview" ? "fortress" : name;
+  const target = views.some((v) => v.dataset.view === view) ? view : "home";
   views.forEach((v) => (v.hidden = v.dataset.view !== target));
   closeModal(); setMenu(false);
   window.scrollTo(0, 0);
