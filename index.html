@@ -87,7 +87,7 @@ button.hearth, .btn.hearth { background: var(--hearth); border-color: var(--hear
 button:disabled { opacity: 0.45; cursor: default; }
 
 label { font-weight: 700; font-size: 0.95rem; }
-input[type=text], textarea, select {
+input[type=text], input[type=date], input[type=time], textarea, select {
   font: inherit; width: 100%; padding: 11px 13px; border-radius: 10px; border: 1.5px solid var(--line);
   background: var(--bg); color: var(--ink);
 }
@@ -143,6 +143,11 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
 .modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
 
+.need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.need-grid > * { min-width: 0; }
+.need-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-left: 4px solid var(--hearth); border-radius: 10px; background: var(--bg); }
+.need-row > div { min-width: 0; }
+.need-row button { padding: 6px 12px; font-size: 0.85rem; font-weight: 400; }
 .templates { display: flex; flex-direction: column; gap: 8px; }
 .tpl { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-weight: 400; }
 .tpl input { margin-top: 5px; accent-color: var(--accent); }
@@ -308,6 +313,30 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div class="sheet">
       <span class="label">What kinds of help would be welcome?</span>
       <div class="chips" id="c-helps"></div>
+    </div>
+
+    <div class="sheet">
+      <span class="label">Schedule specific needs</span>
+      <p class="small muted">Add the things people can sign up for. Be as specific as you like. Private details, like a school name or address, are only shown to the person who signs up.</p>
+      <div class="chips" id="nd-ideas"></div>
+      <div class="field"><label for="nd-what">What's needed</label><input type="text" id="nd-what" placeholder="Pick up younger child from school"></div>
+      <div class="need-grid">
+        <div class="field"><label for="nd-type">Kind of help</label><select id="nd-type"></select></div>
+        <div class="field"><label for="nd-date">Starting</label><input type="date" id="nd-date"></div>
+        <div class="field"><label for="nd-time">Time</label><input type="time" id="nd-time" value="15:00"></div>
+        <div class="field"><label for="nd-repeat">Repeat</label>
+          <select id="nd-repeat">
+            <option value="once">Just once</option>
+            <option value="weekdays2">Every weekday, for 2 weeks</option>
+            <option value="daily7">Every day, for 1 week</option>
+            <option value="weekly4">Once a week, for 4 weeks</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="nd-detail">Details for the helper <span class="muted small">(optional, shown only after they sign up)</span></label><input type="text" id="nd-detail" placeholder="Side door of the school. Please bring a booster seat."></div>
+      <p class="small" id="nd-msg" style="color:var(--hearth-ink)"></p>
+      <div class="row"><button class="ghost" id="nd-add">Add to schedule</button></div>
+      <div class="stack" id="nd-list" style="gap:8px"></div>
     </div>
 
     <div class="sheet">
@@ -575,7 +604,7 @@ function renderFortress() {
     ${F.organizer ? `<p class="small muted">Organized by ${esc(F.organizer)}</p>` : ""}
     <div class="badges">${badges.map((b) => `<span class="badge">${b}</span>`).join("")}</div>`;
 
-  const dated = slots.filter((s) => F.helps.includes(s.type));
+  const dated = slots;
   const byDay = {};
   dated.forEach((s) => { const k = s.date.toDateString(); (byDay[k] = byDay[k] || []).push(s); });
   $("f-slots").innerHTML = dated.length ? `<h2>Sign up to help</h2>` + Object.values(byDay).map((list) => `
@@ -647,6 +676,7 @@ function openSignup(s) {
       <div class="sheet warm">
         <span class="label">Drop-off details, just for you</span>
         <p><strong>${esc(F.address || "Shared by the organizer")}</strong>${F.example ? ` <span class="small muted">(example)</span>` : ""}</p>
+        ${s.detail ? `<p>${esc(s.detail)}</p>` : ""}
         ${F.dropoff ? `<p>${esc(F.dropoff)}</p>` : ""}
       </div>
       <p class="small muted">Please keep this address private. In the full version, you'll get a reminder the day before.</p>
@@ -687,7 +717,7 @@ $("c-preview").onclick = () => {
     helps: [...selectedHelps], noContact: $("c-nocontact").checked, dropoff: $("c-dropoff").value.trim().slice(0, 200),
     passcode: $("c-passcode").checked, showNames: $("c-names").checked, address: "",
   };
-  slots = makeSlots(F.helps).map((s) => ({ ...s, taken: null }));
+  slots = expandNeeds();
   notes = []; prayers = 0; prayed = false;
   renderFortress();
   location.hash = "fortress";
@@ -707,6 +737,68 @@ document.querySelectorAll(".zoom").forEach((b) => (b.onclick = () => {
   $("lightbox-img").src = b.dataset.src; $("lightbox-img").alt = b.dataset.alt; $("lightbox").hidden = false;
 }));
 $("lightbox").onclick = () => ($("lightbox").hidden = true);
+
+/* ---------- scheduled needs (Start a Fortress) ---------- */
+const NEED_TYPES = ["meals", "groceries", "rides", "childcare", "pets", "chores", "company"];
+const NEED_IDEAS = [
+  ["Dinner drop-off", "meals", "17:30"], ["School pickup", "childcare", "15:00"], ["Ride to an appointment", "rides", "09:00"],
+  ["Grocery run", "groceries", "10:00"], ["Evening dog walk", "pets", "19:00"], ["Sit with us for a while", "company", "14:00"],
+];
+const REPEAT_LABEL = { once: "", weekdays2: "Every weekday, 2 weeks", daily7: "Every day, 1 week", weekly4: "Weekly, 4 weeks" };
+const needs = [];
+const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const parseYmd = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const timeFmt = (hhmm) => {
+  if (!hhmm) return "Anytime";
+  const [h, m] = hhmm.split(":").map(Number);
+  return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(new Date(2000, 0, 1, h, m));
+};
+function occurrences(n) {
+  const start = parseYmd(n.date), out = [];
+  const add = (k) => { const d = new Date(start); d.setDate(start.getDate() + k); return d; };
+  if (n.repeat === "weekdays2") { for (let k = 0; k < 14; k++) { const d = add(k); if (d.getDay() % 6 !== 0) out.push(d); } }
+  else if (n.repeat === "daily7") { for (let k = 0; k < 7; k++) out.push(add(k)); }
+  else if (n.repeat === "weekly4") { for (let k = 0; k < 4; k++) out.push(add(k * 7)); }
+  else out.push(start);
+  return out;
+}
+function expandNeeds() {
+  let k = 0;
+  return needs.flatMap((n) => occurrences(n).map((date) => ({ id: "n" + k++, type: n.type, what: n.what, when: timeFmt(n.time), date, detail: n.detail, taken: null })))
+    .sort((a, b) => a.date - b.date);
+}
+function renderNeeds() {
+  $("nd-list").innerHTML = needs.length
+    ? needs.map((n, i) => `<div class="need-row"><div><strong>${esc(n.what)}</strong>
+        <div class="small muted">${esc(HELP[n.type].label)} · ${dayFmt.format(parseYmd(n.date))} · ${esc(timeFmt(n.time))}${REPEAT_LABEL[n.repeat] ? ` · ${REPEAT_LABEL[n.repeat]}` : ""}</div>
+        ${n.detail ? `<div class="small muted">Private details added</div>` : ""}</div>
+        <button class="ghost" data-remove="${i}" aria-label="Remove ${esc(n.what)}">Remove</button></div>`).join("")
+    : `<p class="small muted">Nothing scheduled yet. Until you add something, your Fortress will show only the anytime ways to help.</p>`;
+}
+$("nd-type").innerHTML = NEED_TYPES.map((t) => `<option value="${t}">${HELP[t].label}</option>`).join("");
+$("nd-type").value = "childcare";
+{ const t = new Date(); t.setDate(t.getDate() + 1); $("nd-date").value = ymd(t); }
+$("nd-ideas").innerHTML = NEED_IDEAS.map(([what], i) => `<button type="button" class="chip" data-idea="${i}">${esc(what)}</button>`).join("");
+$("nd-ideas").addEventListener("click", (e) => {
+  const i = e.target.dataset.idea; if (i == null) return;
+  const [what, type, time] = NEED_IDEAS[+i];
+  $("nd-what").value = what; $("nd-type").value = type; $("nd-time").value = time; $("nd-what").focus();
+});
+$("nd-add").onclick = () => {
+  const what = $("nd-what").value.trim();
+  if (!what) { $("nd-msg").textContent = "Describe what's needed first, like “Pick up younger child from school.”"; $("nd-what").focus(); return; }
+  if (!$("nd-date").value) { $("nd-msg").textContent = "Choose a starting date."; $("nd-date").focus(); return; }
+  needs.push({ what: what.slice(0, 80), type: $("nd-type").value, date: $("nd-date").value, time: $("nd-time").value, repeat: $("nd-repeat").value, detail: $("nd-detail").value.trim().slice(0, 200) });
+  if (!selectedHelps.has($("nd-type").value)) {
+    selectedHelps.add($("nd-type").value);
+    document.querySelector(`[data-help="${$("nd-type").value}"]`)?.setAttribute("aria-pressed", "true");
+  }
+  $("nd-msg").textContent = "";
+  $("nd-what").value = ""; $("nd-detail").value = ""; $("nd-repeat").value = "once";
+  renderNeeds();
+};
+$("nd-list").addEventListener("click", (e) => { const i = e.target.dataset.remove; if (i != null) { needs.splice(+i, 1); renderNeeds(); } });
+renderNeeds();
 
 /* ---------- header menu ---------- */
 function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
