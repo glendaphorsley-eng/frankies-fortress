@@ -150,6 +150,16 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   background: var(--surface); border-top: 1px solid var(--line); text-align: center; font-size: 0.92rem;
 }
 .crisis strong { color: var(--hearth-ink); }
+.shop-teaser { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; text-decoration: none; color: inherit; }
+.shop-teaser > div { min-width: 0; }
+.shop-teaser img { width: 110px; height: 110px; object-fit: cover; object-position: center 35%; border-radius: 10px; display: block; }
+.gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gallery figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.gallery figcaption { font-size: 0.88rem; color: var(--muted); text-align: center; }
+.zoom { padding: 0; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); overflow: hidden; cursor: zoom-in; }
+.zoom img { width: 100%; height: auto; display: block; }
+.lightbox { position: fixed; inset: 0; z-index: 45; background: rgba(20, 15, 12, 0.85); display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 85vh; border-radius: var(--r); }
 footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
 @media (prefers-reduced-motion: reduce) { .flicker { animation: none; } }
@@ -195,6 +205,15 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <h2>For hard seasons, and for grief</h2>
       <p>A Fortress can support a family during an active crisis, or after they've lost someone they love to suicide, overdose or illness. Grief after these losses is often lonely. Steady, quiet support helps more than people know.</p>
     </div>
+
+    <a class="sheet warm shop-teaser" href="#shop">
+      <img src="images/hoodie-back.png" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone.">
+      <div class="stack" style="gap:6px">
+        <span class="label">Wear the message</span>
+        <h3>Hola, friend. You are not alone.</h3>
+        <p class="small">Hoodies featuring original paintings. Proceeds support suicide prevention.</p>
+      </div>
+    </a>
 
     <a class="sheet green" href="#frankie" style="text-decoration:none;color:inherit">
       <span class="label">In honor of Frankie</span>
@@ -354,6 +373,32 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     </div>
   </section>
 
+  <!-- SHOP -->
+  <section data-view="shop" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Wear the message</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>Hola, friend. You are not alone.</h2>
+      <p class="muted">A hoodie that says what so many people need to hear. Every one sold helps fund suicide prevention.</p>
+    </div>
+    <div class="gallery">
+      <figure><button type="button" class="zoom" data-src="images/hoodie-back.png" data-alt="Back of the hoodie"><img src="images/hoodie-back.png" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></button><figcaption>Back: the full painting</figcaption></figure>
+      <figure><button type="button" class="zoom" data-src="images/hoodie-front.png" data-alt="Front of the hoodie"><img src="images/hoodie-front.png" alt="Front of a gray hoodie with a small colorful crest and the words Frankie's Fortress."></button><figcaption>Front: the Frankie's Fortress crest</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <h3>About the art</h3>
+      <p class="placeholder">A note about the artist will go here, shared in his own words or with his blessing.</p>
+    </div>
+    <div class="sheet warm">
+      <h3>Where the money goes</h3>
+      <p class="placeholder">The charity or foundation receiving the proceeds will be named here.</p>
+    </div>
+    <div class="sheet">
+      <p>Heather gray hoodie · small crest on the front · full painting on the back. Printed and shipped by Custom Ink.</p>
+      <div class="row"><a class="btn hearth" id="shop-link" target="_blank" rel="noopener">Order on Custom Ink</a></div>
+      <p class="small muted" id="shop-note"></p>
+    </div>
+  </section>
+
   <!-- FRANKIE -->
   <section data-view="frankie" class="stack" hidden>
     <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Dedication</span></div>
@@ -365,6 +410,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 </div>
 
 <div class="crisis">Need help right now? <strong>Call or text 988</strong> · <a href="#resources">More resources</a></div>
+<div class="lightbox" id="lightbox" hidden><img id="lightbox-img" alt=""></div>
 <div class="modal" id="modal" hidden><div class="sheet" id="modal-body" role="dialog" aria-modal="true"></div></div>
 
 <script>
@@ -633,6 +679,21 @@ $("c-preview").onclick = () => {
   renderFortress();
   location.hash = "fortress";
 };
+
+/* ---------- shop ---------- */
+// Paste the Custom Ink campaign link here once it exists.
+const SHOP_URL = "";
+if (SHOP_URL) $("shop-link").href = SHOP_URL;
+else {
+  $("shop-link").removeAttribute("href");
+  $("shop-link").setAttribute("aria-disabled", "true");
+  $("shop-link").style.opacity = "0.5";
+  $("shop-note").textContent = "Ordering opens soon. The Custom Ink link will be added here.";
+}
+document.querySelectorAll(".zoom").forEach((b) => (b.onclick = () => {
+  $("lightbox-img").src = b.dataset.src; $("lightbox-img").alt = b.dataset.alt; $("lightbox").hidden = false;
+}));
+$("lightbox").onclick = () => ($("lightbox").hidden = true);
 
 /* ---------- navigation ---------- */
 const views = [...document.querySelectorAll("[data-view]")];
