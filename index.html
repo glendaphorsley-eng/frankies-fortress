@@ -88,10 +88,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--hearth); }
 /* Hero */
 .hero { display: flex; flex-direction: column; gap: 14px; }
 .art { width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--stone3); }
-.art svg { width: 100%; height: 100%; display: block; }
-.flicker { animation: flicker 3.4s ease-in-out infinite alternate; }
-.flicker.b { animation-duration: 2.6s; animation-delay: -1.2s; }
-@keyframes flicker { 0% { opacity: 0.78; } 30% { opacity: 1; } 55% { opacity: 0.86; } 80% { opacity: 0.97; } 100% { opacity: 0.82; } }
+.art canvas { width: 100%; height: 100%; display: block; }
 .tagline { font-family: var(--display); font-style: italic; font-size: 1.3rem; color: var(--muted); }
 
 .steps { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
@@ -150,10 +147,16 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   background: var(--surface); border-top: 1px solid var(--line); text-align: center; font-size: 0.92rem;
 }
 .crisis strong { color: var(--hearth-ink); }
-.shop-teaser { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; text-decoration: none; color: inherit; }
-.shop-teaser > div { min-width: 0; }
-.shop-teaser img { width: 110px; height: 110px; object-fit: cover; object-position: center 35%; border-radius: 10px; display: block; }
+.shop-teaser { text-decoration: none; color: inherit; }
+.thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.thumb { aspect-ratio: 1; overflow: hidden; border-radius: 10px; background: var(--surface); display: block; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; }
+/* Zoom in on the chest crest and its "Frankie's Fortress" wording */
+.crest img { transform: scale(2.3); transform-origin: 50% 44%; }
 .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gallery .wide { grid-column: 1 / -1; }
+.zoom.crest { aspect-ratio: 2 / 1; }
+.zoom.crest img { height: 100%; object-fit: cover; transform: scale(2.4); transform-origin: 50% 44%; }
 .gallery figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .gallery figcaption { font-size: 0.88rem; color: var(--muted); text-align: center; }
 .zoom { padding: 0; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); overflow: hidden; cursor: zoom-in; }
@@ -162,7 +165,6 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .lightbox img { max-width: 100%; max-height: 85vh; border-radius: var(--r); }
 footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
-@media (prefers-reduced-motion: reduce) { .flicker { animation: none; } }
 </style>
 
 <div class="wrap">
@@ -207,7 +209,11 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     </div>
 
     <a class="sheet warm shop-teaser" href="#shop">
-      <img src="images/hoodie-back.png" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone.">
+      <div class="thumbs">
+        <span class="thumb"><img src="images/hoodie-front.png" alt="Front of the hoodie: a small colorful crest above the words Frankie's Fortress."></span>
+        <span class="thumb crest"><img src="images/hoodie-front.png" alt="Close-up of the Frankie's Fortress crest on the chest."></span>
+        <span class="thumb"><img src="images/hoodie-back.png" alt="Back of the hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></span>
+      </div>
       <div class="stack" style="gap:6px">
         <span class="label">Wear the message</span>
         <h3>Hola, friend. You are not alone.</h3>
@@ -383,6 +389,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div class="gallery">
       <figure><button type="button" class="zoom" data-src="images/hoodie-back.png" data-alt="Back of the hoodie"><img src="images/hoodie-back.png" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></button><figcaption>Back: the full painting</figcaption></figure>
       <figure><button type="button" class="zoom" data-src="images/hoodie-front.png" data-alt="Front of the hoodie"><img src="images/hoodie-front.png" alt="Front of a gray hoodie with a small colorful crest and the words Frankie's Fortress."></button><figcaption>Front: the Frankie's Fortress crest</figcaption></figure>
+      <figure class="wide"><button type="button" class="zoom crest" data-src="images/hoodie-front.png" data-alt="Front of the hoodie"><img src="images/hoodie-front.png" alt="Close-up of the colorful crest on the chest, with the words Frankie's Fortress beneath it."></button><figcaption>Close-up: the crest and "Frankie's Fortress" on the chest</figcaption></figure>
     </div>
     <div class="sheet">
       <h3>About the art</h3>
@@ -417,49 +424,188 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-/* ---------- stone fortress art ---------- */
-let artN = 0;
-function fortressArt(w, h, opts = {}) {
-  const id = "ff" + artN++;
-  let seed = 11 + artN * 7;
-  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const stones = ["--stone1", "--stone2", "--stone3"];
-  const top = Math.round(h * 0.22), bh = Math.max(12, Math.round(h / 11));
-  let s = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <radialGradient id="${id}g" cx="50%" cy="78%" r="70%"><stop offset="0" stop-color="#FFE3A8"/><stop offset="0.35" stop-color="#F2A548"/><stop offset="1" stop-color="#7A3510"/></radialGradient>
-      <radialGradient id="${id}s" cx="50%" cy="100%" r="55%"><stop offset="0" style="stop-color:var(--glow)"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect width="${w}" height="${h}" style="fill:var(--bg)"/>
-    <rect y="${top}" width="${w}" height="${h - top}" style="fill:var(--mortar)"/>`;
-  // Battlements along the top
-  const mw = Math.round(w / 14);
-  for (let x = 0; x < w; x += mw * 2) s += `<rect x="${x + 1}" y="${top - bh * 1.2}" width="${mw - 2}" height="${bh * 1.2 + 1}" rx="1.5" style="fill:var(--${stones[Math.floor(rnd() * 3)].slice(2)})"/>`;
-  // Courses of stone blocks
-  for (let y = top, row = 0; y < h; y += bh, row++) {
-    let x = row % 2 ? -Math.round(rnd() * 20) - 8 : -Math.round(rnd() * 8);
-    while (x < w) {
-      const bw = Math.round(w / 12 + rnd() * w / 10);
-      s += `<rect x="${x + 1}" y="${y + 1}" width="${bw - 2}" height="${bh - 2}" rx="2" style="fill:var(${stones[Math.floor(rnd() * 3)]})"/>`;
-      x += bw;
+/* ---------- stone fortress art (painted on canvas) ----------
+   The wall is painted once into an offscreen canvas; each frame copies it and adds flickering firelight. */
+const isNight = () => {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+};
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function seeded(seed) {
+  return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+let grainTile = null;
+function grain() {
+  if (grainTile) return grainTile;
+  const c = document.createElement("canvas"); c.width = c.height = 160;
+  const g = c.getContext("2d"), img = g.createImageData(160, 160), r = seeded(99);
+  for (let i = 0; i < img.data.length; i += 4) { const v = r() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 28; }
+  g.putImageData(img, 0, 0);
+  return (grainTile = c);
+}
+// Weathered sandstone, limestone and granite tones.
+const STONE_TONES = [[178, 162, 138], [160, 146, 126], [190, 175, 152], [146, 133, 118], [170, 151, 124], [134, 124, 112], [156, 140, 112]];
+const clamp255 = (v) => Math.max(0, Math.min(255, Math.round(v)));
+
+function paintWall(w, h, opts, dpr) {
+  const base = document.createElement("canvas"); base.width = Math.round(w * dpr); base.height = Math.round(h * dpr);
+  const g = base.getContext("2d"); g.scale(dpr, dpr);
+  const night = isNight(), rnd = seeded(opts.seed || 7), dim = night ? 0.46 : 1;
+  const top = h * (opts.top ?? 0.26);
+  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+
+  // Sky: dusk by day, deep night in dark mode.
+  const sky = g.createLinearGradient(0, 0, 0, top);
+  if (night) { sky.addColorStop(0, "#0c0e18"); sky.addColorStop(1, "#2b2230"); }
+  else { sky.addColorStop(0, "#aeb9c1"); sky.addColorStop(1, "#ead6b8"); }
+  g.fillStyle = sky; g.fillRect(0, 0, w, top + 2);
+
+  const color = (rgb, v, k) => `rgb(${clamp255((rgb[0] + v) * dim * k)},${clamp255((rgb[1] + v) * dim * k)},${clamp255((rgb[2] + v) * dim * k)})`;
+  function fillStone(x, y, sw, sh) {
+    const rgb = STONE_TONES[Math.floor(rnd() * STONE_TONES.length)], v = (rnd() - 0.5) * 28;
+    const gr = g.createLinearGradient(x, y, x + sw * 0.5, y + sh);
+    gr.addColorStop(0, color(rgb, v, 1.14)); gr.addColorStop(0.5, color(rgb, v, 1)); gr.addColorStop(1, color(rgb, v, 0.74));
+    g.save();
+    g.shadowColor = "rgba(0,0,0,0.5)"; g.shadowBlur = 4; g.shadowOffsetY = 2;
+    g.fillStyle = gr; g.fill();
+    g.restore();
+    g.save(); g.clip();
+    // Pits, chips and weathering
+    const n = Math.round((sw * sh) / 70);
+    for (let k = 0; k < n; k++) {
+      g.fillStyle = rnd() < 0.55 ? `rgba(0,0,0,${0.05 + rnd() * 0.09})` : `rgba(255,255,255,${0.03 + rnd() * 0.05})`;
+      g.beginPath(); g.arc(x + rnd() * sw, y + rnd() * sh, 0.3 + rnd() * 1.5, 0, 6.3); g.fill();
     }
+    // A few hairline cracks
+    if (rnd() < 0.25) {
+      g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 0.7; g.beginPath();
+      let cx = x + rnd() * sw, cy = y; g.moveTo(cx, cy);
+      for (let s = 0; s < 4; s++) { cx += (rnd() - 0.5) * sw * 0.25; cy += sh * 0.28; g.lineTo(cx, cy); }
+      g.stroke();
+    }
+    // Moss and lichen, mostly low on the wall
+    if (rnd() < 0.08 + (y / h) * 0.14) {
+      g.fillStyle = night ? "rgba(60,80,44,0.32)" : "rgba(92,110,60,0.30)";
+      g.beginPath(); g.ellipse(x + rnd() * sw, y + sh * (0.7 + rnd() * 0.3), sw * (0.15 + rnd() * 0.25), sh * (0.12 + rnd() * 0.15), 0, 0, 6.3); g.fill();
+    }
+    // Inner shadow along the bottom edge for depth
+    const sh2 = g.createLinearGradient(0, y + sh * 0.65, 0, y + sh);
+    sh2.addColorStop(0, "rgba(0,0,0,0)"); sh2.addColorStop(1, "rgba(0,0,0,0.28)");
+    g.fillStyle = sh2; g.fillRect(x, y, sw, sh);
+    g.restore();
   }
-  // Arched doorway with hearth light
-  const dw = Math.round(w * 0.16), dx = Math.round(w / 2 - dw / 2), dTop = Math.round(h * 0.45), r = dw / 2;
-  const door = `M${dx} ${h} V${dTop + r} A${r} ${r} 0 0 1 ${dx + dw} ${dTop + r} V${h} Z`;
-  s += `<path d="${door}" fill="none" style="stroke:var(--stone3)" stroke-width="${Math.max(6, dw * 0.12)}"/>`;
-  s += `<path d="${door}" fill="url(#${id}g)" class="flicker"/>`;
-  // Two small arched windows
+  function stone(x, y, sw, sh) {
+    const j = Math.min(sw, sh) * 0.14;
+    const p = [[x + rnd() * j, y + rnd() * j], [x + sw - rnd() * j, y + rnd() * j], [x + sw - rnd() * j, y + sh - rnd() * j], [x + rnd() * j, y + sh - rnd() * j]];
+    g.beginPath();
+    let m = mid(p[0], p[1]); g.moveTo(m[0], m[1]);
+    for (let i = 1; i <= 4; i++) { const c = p[i % 4], nx = mid(p[i % 4], p[(i + 1) % 4]); g.quadraticCurveTo(c[0], c[1], nx[0], nx[1]); }
+    g.closePath();
+    fillStone(x, y, sw, sh);
+  }
+  const mortar = night ? "#17130f" : "#4f463d";
+
+  // Battlements
+  const mw = w / 13, mh = h * 0.12;
+  for (let x = mw * 0.35; x < w; x += mw * 2) {
+    g.fillStyle = mortar; g.fillRect(x, top - mh, mw, mh + 2);
+    stone(x + 1, top - mh + 1, mw - 2, mh / 2 - 1);
+    stone(x + 1, top - mh / 2 + 1, mw - 2, mh / 2 - 1);
+  }
+  // Wall of rough coursed stone
+  g.fillStyle = mortar; g.fillRect(0, top, w, h - top);
+  for (let y = top; y < h;) {
+    const rh = h * (0.075 + rnd() * 0.04);
+    for (let x = -rnd() * 50; x < w;) { const sw = rh * (1.2 + rnd() * 1.8); stone(x + 1.5, y + 1.5, sw - 3, rh - 3); x += sw; }
+    y += rh;
+  }
+
+  // Doorway: jamb stones, an arch of wedge stones, and the firelit interior
+  const cx = w / 2, dw = w * (opts.door || 0.17), r = dw / 2, dTop = h * (opts.doorTop || 0.47), rt = dw * 0.24;
+  g.fillStyle = mortar;
+  g.beginPath(); g.moveTo(cx - r - rt, h); g.lineTo(cx - r - rt, dTop + r); g.arc(cx, dTop + r, r + rt, Math.PI, 0); g.lineTo(cx + r + rt, h); g.closePath(); g.fill();
+  for (let y = dTop + r; y < h; y += rt * 0.9) { stone(cx - r - rt + 1, y + 1, rt - 2, rt * 0.9 - 2); stone(cx + r + 1, y + 1, rt - 2, rt * 0.9 - 2); }
+  const wedges = 9;
+  for (let k = 0; k < wedges; k++) {
+    const a0 = Math.PI + (k * Math.PI) / wedges + 0.012, a1 = Math.PI + ((k + 1) * Math.PI) / wedges - 0.012;
+    g.beginPath(); g.arc(cx, dTop + r, r + rt - 1, a0, a1); g.arc(cx, dTop + r, r + 1, a1, a0, true); g.closePath();
+    fillStone(cx + Math.cos((a0 + a1) / 2) * (r + rt / 2) - rt / 2, dTop + r + Math.sin((a0 + a1) / 2) * (r + rt / 2) - rt / 2, rt, rt);
+  }
+  const door = new Path2D(); door.moveTo(cx - r, h); door.lineTo(cx - r, dTop + r); door.arc(cx, dTop + r, r, Math.PI, 0); door.lineTo(cx + r, h); door.closePath();
+  const inside = g.createRadialGradient(cx, h, 0, cx, h, dw * 1.25);
+  inside.addColorStop(0, "#ffcf87"); inside.addColorStop(0.28, "#e98f3b"); inside.addColorStop(0.62, "#7a3410"); inside.addColorStop(1, "#1a0c06");
+  g.fillStyle = inside; g.fill(door);
+  g.save(); g.clip(door); g.lineWidth = dw * 0.16; g.strokeStyle = "rgba(0,0,0,0.5)"; g.stroke(door); g.restore();
+
+  // Narrow arched windows with candlelight
+  const wins = [];
   if (opts.windows !== false) {
-    const ww = Math.round(w * 0.045), wy = Math.round(h * 0.4);
-    [w * 0.24, w * 0.76].forEach((cx, i) => {
-      const wx = Math.round(cx - ww / 2), wr = ww / 2;
-      s += `<path d="M${wx} ${wy + ww * 1.6} V${wy + wr} A${wr} ${wr} 0 0 1 ${wx + ww} ${wy + wr} V${wy + ww * 1.6} Z" fill="url(#${id}g)" class="flicker${i ? " b" : ""}" style="stroke:var(--mortar)" stroke-width="2"/>`;
+    [w * 0.22, w * 0.78].forEach((wx) => {
+      const ww = w * 0.032, wt = h * 0.4, wh = ww * 2.6, f = ww * 0.45;
+      g.fillStyle = mortar;
+      g.beginPath(); g.moveTo(wx - ww / 2 - f, wt + wh + f); g.lineTo(wx - ww / 2 - f, wt + ww / 2); g.arc(wx, wt + ww / 2, ww / 2 + f, Math.PI, 0); g.lineTo(wx + ww / 2 + f, wt + wh + f); g.closePath(); g.fill();
+      const p = new Path2D(); p.moveTo(wx - ww / 2, wt + wh); p.lineTo(wx - ww / 2, wt + ww / 2); p.arc(wx, wt + ww / 2, ww / 2, Math.PI, 0); p.lineTo(wx + ww / 2, wt + wh); p.closePath();
+      const lg = g.createLinearGradient(0, wt, 0, wt + wh); lg.addColorStop(0, "#f6b25c"); lg.addColorStop(1, "#8a3c12");
+      g.fillStyle = lg; g.fill(p);
+      wins.push({ x: wx, y: wt + wh * 0.55, r: ww * 3 });
     });
   }
-  // Warm light spilling from the doorway
-  s += `<ellipse cx="${w / 2}" cy="${h}" rx="${w * 0.42}" ry="${h * 0.42}" fill="url(#${id}s)" class="flicker"/>`;
-  return s + `</svg>`;
+
+  // Edge darkening and film grain
+  const vig = g.createRadialGradient(w / 2, h * 0.6, Math.min(w, h) * 0.3, w / 2, h * 0.6, Math.max(w, h) * 0.75);
+  vig.addColorStop(0, "rgba(0,0,0,0)"); vig.addColorStop(1, night ? "rgba(0,0,0,0.55)" : "rgba(30,18,8,0.38)");
+  g.fillStyle = vig; g.fillRect(0, 0, w, h);
+  g.globalCompositeOperation = "overlay"; g.fillStyle = g.createPattern(grain(), "repeat"); g.fillRect(0, 0, w, h);
+  g.globalCompositeOperation = "source-over";
+  return { base, door, cx, dw, h, w, wins, night };
+}
+
+const arts = [];
+function addArt(el, opts) {
+  const c = document.createElement("canvas"); el.appendChild(c);
+  arts.push({ el, c, ctx: c.getContext("2d"), opts, scene: null, key: "" });
+}
+function drawArt(a, t) {
+  const w = a.el.clientWidth, h = a.el.clientHeight;
+  if (!w || !h) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1), key = `${w}x${h}x${dpr}x${isNight()}`;
+  if (a.key !== key) {
+    a.c.width = Math.round(w * dpr); a.c.height = Math.round(h * dpr);
+    a.scene = paintWall(w, h, a.opts, dpr); a.key = key; a.drawnStatic = false;
+  }
+  if (reduceMotion && a.drawnStatic) return;
+  const s = a.scene, g = a.ctx, f = reduceMotion ? 0.9 : 0.8 + 0.09 * Math.sin(t / 170) + 0.06 * Math.sin(t / 63 + 1.3) + 0.05 * Math.sin(t / 29 + 0.4);
+  const k = s.night ? 1.3 : 0.85;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.globalCompositeOperation = "source-over"; g.drawImage(s.base, 0, 0, w, h);
+  // Firelight washing over the nearby stones
+  g.globalCompositeOperation = "lighter";
+  const wash = g.createRadialGradient(s.cx, h, 0, s.cx, h, w * 0.55);
+  wash.addColorStop(0, `rgba(255,140,50,${0.3 * f * k})`); wash.addColorStop(0.45, `rgba(200,90,30,${0.1 * f * k})`); wash.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = wash; g.fillRect(0, 0, w, h);
+  // Flames inside the doorway
+  g.save(); g.clip(s.door);
+  for (let i = 0; i < 5; i++) {
+    const fx = s.cx + (i - 2) * s.dw * 0.11, fh = s.dw * (0.32 + 0.12 * Math.sin(t / (90 + i * 17) + i)) * (i === 2 ? 1.35 : 1), fw = s.dw * 0.11;
+    const fl = g.createRadialGradient(fx, h - fh * 0.15, 0, fx, h - fh * 0.15, fh);
+    fl.addColorStop(0, `rgba(255,236,170,${0.85 * f})`); fl.addColorStop(0.35, `rgba(255,160,60,${0.55 * f})`); fl.addColorStop(1, "rgba(120,40,0,0)");
+    g.fillStyle = fl; g.beginPath(); g.ellipse(fx, h - fh * 0.35, fw, fh * 0.7, 0, 0, 6.3); g.fill();
+  }
+  g.restore();
+  // Candle glow at the windows
+  s.wins.forEach((wn, i) => {
+    const wf = reduceMotion ? 0.9 : 0.85 + 0.15 * Math.sin(t / (110 + i * 40) + i * 2);
+    const wg = g.createRadialGradient(wn.x, wn.y, 0, wn.x, wn.y, wn.r);
+    wg.addColorStop(0, `rgba(255,170,80,${0.35 * wf * k})`); wg.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = wg; g.fillRect(wn.x - wn.r, wn.y - wn.r, wn.r * 2, wn.r * 2);
+  });
+  g.globalCompositeOperation = "source-over";
+  a.drawnStatic = true;
+}
+let lastFrame = 0;
+function artLoop(t) {
+  if (t - lastFrame > 50) { lastFrame = t; arts.forEach((a) => drawArt(a, t)); }
+  requestAnimationFrame(artLoop);
 }
 function brandMark() {
   return `<svg viewBox="0 0 30 22" aria-hidden="true">
@@ -467,9 +613,10 @@ function brandMark() {
     <path d="M12 21v-5a3 3 0 0 1 6 0v5z" style="fill:var(--hearth)"/></svg>`;
 }
 document.querySelectorAll(".mark").forEach((el) => (el.innerHTML = brandMark()));
-$("hero-art").innerHTML = fortressArt(640, 360);
-$("f-art").innerHTML = fortressArt(900, 300);
-$("k-art").innerHTML = fortressArt(900, 300, { windows: false });
+addArt($("hero-art"), { seed: 7, door: 0.17, top: 0.26 });
+addArt($("f-art"), { seed: 21, door: 0.11, top: 0.3, doorTop: 0.4 });
+addArt($("k-art"), { seed: 33, door: 0.11, top: 0.3, doorTop: 0.4, windows: false });
+requestAnimationFrame(artLoop);
 
 /* ---------- content ---------- */
 const HELP = {
