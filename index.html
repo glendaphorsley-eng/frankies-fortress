@@ -104,7 +104,10 @@ input:focus, textarea:focus { outline: none; border-color: var(--hearth); }
 /* Hero */
 .hero { display: flex; flex-direction: column; gap: 14px; }
 .art { width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--stone3); }
-.art canvas { width: 100%; height: 100%; display: block; }
+.art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-photo { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.credit { font-size: 0.78rem; color: var(--muted); text-align: right; }
+.credit a { color: inherit; }
 .tagline { font-family: var(--display); font-style: italic; font-size: 1.3rem; color: var(--muted); }
 
 .steps { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
@@ -211,7 +214,10 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <h1>No family should face this alone.</h1>
       <p class="tagline">A quiet way to surround a family with support.</p>
       <div class="hero-actions"><a class="btn hearth big" href="#create">Start a Fortress</a><a class="btn ghost big" href="#fortress">See an example</a></div>
-      <div class="art" id="hero-art" aria-hidden="true"></div>
+      <figure class="hero-photo">
+        <div class="art" style="aspect-ratio: 4 / 5"><img src="images/castle.jpg" alt="A stone castle at sunrise, wrapped in golden mist, with a cobblestone bridge leading to an arched wooden gate." style="object-position: 50% 42%"></div>
+        <figcaption class="credit">Photo: <a href="https://unsplash.com/@timreb9?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Tim Rebkavets</a> on <a href="https://unsplash.com/?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></figcaption>
+      </figure>
       <p>When a family is going through a mental health or substance use crisis, or grieving a loss, shame often keeps them from asking for help. Frankie's Fortress lets the people who love them show up with meals, rides and kindness, without anyone needing to explain.</p>
     </div>
 
@@ -320,7 +326,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
   <section data-view="fortress" class="stack" hidden>
     <div class="topbar"><a class="back" href="#home">‹ Home</a><nav class="nav"><a href="#guide">How to help</a><a href="#resources">Resources</a></nav></div>
     <div id="f-banner"></div>
-    <div class="art" id="f-art" aria-hidden="true" style="aspect-ratio: 3 / 1"></div>
+    <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 54%"></div>
     <div class="f-head" id="f-head"></div>
     <a class="sheet green" href="#guide" style="text-decoration:none;color:inherit">
       <span class="label">Before you help</span>
@@ -441,7 +447,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
   <!-- FRANKIE -->
   <section data-view="frankie" class="stack" hidden>
     <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Dedication</span></div>
-    <div class="art" id="k-art" aria-hidden="true" style="aspect-ratio: 3 / 1"></div>
+    <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 22%"></div>
     <h2>In honor of Frankie</h2>
     <p class="placeholder">Frankie's dedication is being written by those who love him, and will appear here with his family's blessing.</p>
     <p>Frankie's Fortress exists so that no family has to face a mental health or substance use crisis alone, or grieve in silence. It is a place to be surrounded, protected and cared for by the people who love you.</p>
@@ -456,337 +462,6 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-/* ---------- stone fortress art (painted on canvas) ----------
-   The wall is painted once into an offscreen canvas; each frame copies it and adds flickering firelight. */
-const isNight = () => {
-  const t = document.documentElement.dataset.theme;
-  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-};
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-function seeded(seed) {
-  return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-}
-let grainTile = null;
-function grain() {
-  if (grainTile) return grainTile;
-  const c = document.createElement("canvas"); c.width = c.height = 160;
-  const g = c.getContext("2d"), img = g.createImageData(160, 160), r = seeded(99);
-  for (let i = 0; i < img.data.length; i += 4) { const v = r() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 28; }
-  g.putImageData(img, 0, 0);
-  return (grainTile = c);
-}
-// Weathered sandstone, limestone and granite tones.
-const STONE_TONES = [[178, 162, 138], [160, 146, 126], [190, 175, 152], [146, 133, 118], [170, 151, 124], [134, 124, 112], [156, 140, 112]];
-const clamp255 = (v) => Math.max(0, Math.min(255, Math.round(v)));
-
-// Smooth fractal noise: the grain of stone and the fibers of wood.
-function noiseTexture(w, h, seed, scale, octaves) {
-  const rnd = seeded(seed), perm = new Uint8Array(512), vals = new Float32Array(256);
-  for (let i = 0; i < 256; i++) { perm[i] = i; vals[i] = rnd(); }
-  for (let i = 255; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = perm[i]; perm[i] = perm[j]; perm[j] = t; }
-  for (let i = 0; i < 256; i++) perm[i + 256] = perm[i];
-  const lat = (x, y) => vals[perm[(x & 255) + perm[y & 255]]];
-  const sm = (t) => t * t * (3 - 2 * t);
-  const vnoise = (x, y) => {
-    const xi = Math.floor(x), yi = Math.floor(y), xf = sm(x - xi), yf = sm(y - yi);
-    const a = lat(xi, yi), b = lat(xi + 1, yi), c = lat(xi, yi + 1), d = lat(xi + 1, yi + 1);
-    return a + (b - a) * xf + (c - a) * yf + (a - b - c + d) * xf * yf;
-  };
-  const c = document.createElement("canvas"); c.width = w; c.height = h;
-  const g = c.getContext("2d"), img = g.createImageData(w, h);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    let v = 0, amp = 0.5, f = 1 / scale;
-    for (let o = 0; o < octaves; o++) { v += amp * vnoise(x * f, y * f); amp *= 0.5; f *= 2.1; }
-    const p = (y * w + x) * 4, n = clamp255(v * 270);
-    img.data[p] = img.data[p + 1] = img.data[p + 2] = n; img.data[p + 3] = 255;
-  }
-  g.putImageData(img, 0, 0);
-  return c;
-}
-
-function paintWall(w, h, opts, dpr) {
-  const base = document.createElement("canvas"); base.width = Math.round(w * dpr); base.height = Math.round(h * dpr);
-  const g = base.getContext("2d"); g.scale(dpr, dpr);
-  const night = isNight(), rnd = seeded(opts.seed || 7), dim = night ? 0.46 : 1;
-  const top = h * (opts.top ?? 0.26);
-  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
-  const grainTex = noiseTexture(Math.ceil(w), Math.ceil(h), (opts.seed || 7) + 1, 3, 5);
-  const blotchTex = noiseTexture(Math.ceil(w / 4), Math.ceil(h / 4), (opts.seed || 7) + 2, 6, 3);
-  const texture = (alphaGrain, alphaBlotch) => {
-    g.globalCompositeOperation = "overlay"; g.globalAlpha = alphaGrain; g.drawImage(grainTex, 0, 0, w, h);
-    g.globalCompositeOperation = "multiply"; g.globalAlpha = alphaBlotch; g.drawImage(blotchTex, 0, 0, w, h);
-    g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
-  };
-
-  // Sky: dusk by day, deep night in dark mode.
-  const sky = g.createLinearGradient(0, 0, 0, top);
-  if (night) { sky.addColorStop(0, "#0c0e18"); sky.addColorStop(1, "#2b2230"); }
-  else { sky.addColorStop(0, "#aeb9c1"); sky.addColorStop(1, "#ead6b8"); }
-  g.fillStyle = sky; g.fillRect(0, 0, w, top + 2);
-  if (night) for (let i = 0; i < 40; i++) { g.fillStyle = `rgba(255,248,230,${0.2 + rnd() * 0.5})`; g.fillRect(rnd() * w, rnd() * top * 0.8, 1, 1); }
-
-  const color = (rgb, v, k) => `rgb(${clamp255((rgb[0] + v) * dim * k)},${clamp255((rgb[1] + v) * dim * k)},${clamp255((rgb[2] + v) * dim * k)})`;
-  function fillStone(x, y, sw, sh, path) {
-    const rgb = STONE_TONES[Math.floor(rnd() * STONE_TONES.length)], v = (rnd() - 0.5) * 28;
-    const gr = g.createLinearGradient(x, y, x + sw * 0.5, y + sh);
-    gr.addColorStop(0, color(rgb, v, 1.12)); gr.addColorStop(0.5, color(rgb, v, 1)); gr.addColorStop(1, color(rgb, v, 0.76));
-    g.save();
-    g.shadowColor = "rgba(0,0,0,0.6)"; g.shadowBlur = 5; g.shadowOffsetY = 2.5;
-    g.fillStyle = gr; g.fill(path);
-    g.restore();
-    g.save(); g.clip(path);
-    texture(0.6, 0.38);
-    // Pits, chips and weathering
-    const n = Math.round((sw * sh) / 110);
-    for (let k = 0; k < n; k++) {
-      g.fillStyle = rnd() < 0.55 ? `rgba(0,0,0,${0.05 + rnd() * 0.09})` : `rgba(255,255,255,${0.03 + rnd() * 0.05})`;
-      g.beginPath(); g.arc(x + rnd() * sw, y + rnd() * sh, 0.3 + rnd() * 1.5, 0, 6.3); g.fill();
-    }
-    // A few hairline cracks
-    if (rnd() < 0.25) {
-      g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 0.7; g.beginPath();
-      let cx = x + rnd() * sw, cy = y; g.moveTo(cx, cy);
-      for (let s = 0; s < 4; s++) { cx += (rnd() - 0.5) * sw * 0.25; cy += sh * 0.28; g.lineTo(cx, cy); }
-      g.stroke();
-    }
-    // Moss and lichen, mostly low on the wall
-    if (rnd() < 0.08 + (y / h) * 0.14) {
-      g.fillStyle = night ? "rgba(60,80,44,0.32)" : "rgba(92,110,60,0.30)";
-      g.beginPath(); g.ellipse(x + rnd() * sw, y + sh * (0.7 + rnd() * 0.3), sw * (0.15 + rnd() * 0.25), sh * (0.12 + rnd() * 0.15), 0, 0, 6.3); g.fill();
-    }
-    // Beveled edges: light catches the top-left, shadow gathers bottom-right
-    g.lineWidth = 3;
-    g.translate(1.2, 1.4); g.strokeStyle = "rgba(255,244,228,0.22)"; g.stroke(path);
-    g.translate(-2.4, -2.8); g.strokeStyle = "rgba(0,0,0,0.4)"; g.stroke(path);
-    g.restore();
-  }
-  // Rough hand-laid stone: eight jittered points, smoothed
-  function stone(x, y, sw, sh) {
-    const j = Math.min(sw, sh) * 0.18, cxs = x + sw / 2, cys = y + sh / 2;
-    const raw = [[x, y], [x + sw / 2, y], [x + sw, y], [x + sw, y + sh / 2], [x + sw, y + sh], [x + sw / 2, y + sh], [x, y + sh], [x, y + sh / 2]];
-    const p = raw.map(([px, py], i) => i % 2 === 0
-      ? [px + Math.sign(cxs - px) * rnd() * j, py + Math.sign(cys - py) * rnd() * j]
-      : [px + (rnd() - 0.5) * j * 0.8, py + (rnd() - 0.5) * j * 0.8]);
-    const path = new Path2D();
-    const m = mid(p[0], p[1]); path.moveTo(m[0], m[1]);
-    for (let i = 1; i <= p.length; i++) { const c = p[i % p.length], nx = mid(c, p[(i + 1) % p.length]); path.quadraticCurveTo(c[0], c[1], nx[0], nx[1]); }
-    path.closePath();
-    fillStone(x, y, sw, sh, path);
-  }
-  const mortar = night ? "#17130f" : "#4a4138";
-  const fillMortar = (x, y, mw2, mh2) => {
-    g.fillStyle = mortar; g.fillRect(x, y, mw2, mh2);
-    g.save(); g.beginPath(); g.rect(x, y, mw2, mh2); g.clip(); texture(0.5, 0.5); g.restore();
-  };
-
-  // Battlements
-  const mw = w / 13, mh = h * 0.12;
-  for (let x = mw * 0.35; x < w; x += mw * 2) {
-    fillMortar(x, top - mh, mw, mh + 2);
-    stone(x + 1, top - mh + 1, mw - 2, mh / 2 - 1);
-    stone(x + 1, top - mh / 2 + 1, mw - 2, mh / 2 - 1);
-  }
-  // Wall of rough coursed stone
-  fillMortar(0, top, w, h - top);
-  for (let y = top; y < h;) {
-    const rh = h * (0.075 + rnd() * 0.04);
-    for (let x = -rnd() * 50; x < w;) { const sw = rh * (1.2 + rnd() * 1.8); stone(x + 1.5, y + 1.5, sw - 3, rh - 3); x += sw; }
-    y += rh;
-  }
-
-  // Doorway: jamb stones, an arch of wedge stones, and the firelit interior
-  const cx = w / 2, dw = w * (opts.door || 0.17), r = dw / 2, dTop = h * (opts.doorTop || 0.47), rt = dw * 0.24;
-  g.fillStyle = mortar;
-  g.beginPath(); g.moveTo(cx - r - rt, h); g.lineTo(cx - r - rt, dTop + r); g.arc(cx, dTop + r, r + rt, Math.PI, 0); g.lineTo(cx + r + rt, h); g.closePath(); g.fill();
-  for (let y = dTop + r; y < h; y += rt * 0.9) { stone(cx - r - rt + 1, y + 1, rt - 2, rt * 0.9 - 2); stone(cx + r + 1, y + 1, rt - 2, rt * 0.9 - 2); }
-  const wedges = 9;
-  for (let k = 0; k < wedges; k++) {
-    const a0 = Math.PI + (k * Math.PI) / wedges + 0.012, a1 = Math.PI + ((k + 1) * Math.PI) / wedges - 0.012;
-    const wp = new Path2D(); wp.arc(cx, dTop + r, r + rt - 1, a0, a1); wp.arc(cx, dTop + r, r + 1, a1, a0, true); wp.closePath();
-    fillStone(cx + Math.cos((a0 + a1) / 2) * (r + rt / 2) - rt / 2, dTop + r + Math.sin((a0 + a1) / 2) * (r + rt / 2) - rt / 2, rt, rt, wp);
-  }
-  const door = new Path2D(); door.moveTo(cx - r, h); door.lineTo(cx - r, dTop + r); door.arc(cx, dTop + r, r, Math.PI, 0); door.lineTo(cx + r, h); door.closePath();
-  // Firelit interior: a back wall of dim stone and a flagstone floor
-  const inside = g.createRadialGradient(cx, h, 0, cx, h, dw * 1.15);
-  inside.addColorStop(0, "#f2a35a"); inside.addColorStop(0.3, "#a8501c"); inside.addColorStop(0.65, "#4a200b"); inside.addColorStop(1, "#140904");
-  g.fillStyle = inside; g.fill(door);
-  g.save(); g.clip(door);
-  g.globalCompositeOperation = "multiply"; g.globalAlpha = 0.6; g.drawImage(blotchTex, 0, 0, w, h);
-  g.globalCompositeOperation = "overlay"; g.globalAlpha = 0.5; g.drawImage(grainTex, 0, 0, w, h);
-  g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
-  const floor = g.createLinearGradient(0, h - dw * 0.18, 0, h);
-  floor.addColorStop(0, "rgba(40,18,6,0)"); floor.addColorStop(1, "rgba(40,18,6,0.65)");
-  g.fillStyle = floor; g.fillRect(cx - r, h - dw * 0.18, dw, dw * 0.18);
-
-  // Logs on the hearth, with glowing ember edges
-  const logY = h - dw * 0.07;
-  [-0.22, 0.2].forEach((rot, i) => {
-    g.save(); g.translate(cx + (i ? 0.03 : -0.03) * dw, logY); g.rotate(rot);
-    const L = dw * 0.46, T = dw * 0.075;
-    const lg = g.createLinearGradient(0, -T / 2, 0, T / 2);
-    lg.addColorStop(0, "#5a3a22"); lg.addColorStop(0.5, "#2e1b0e"); lg.addColorStop(1, "#140b05");
-    g.fillStyle = lg; g.beginPath(); g.roundRect(-L / 2, -T / 2, L, T, T / 2); g.fill();
-    g.strokeStyle = "rgba(255,120,30,0.75)"; g.lineWidth = 1.2;
-    for (let c = 0; c < 4; c++) { const sx = -L / 2 + L * (0.2 + c * 0.18); g.beginPath(); g.moveTo(sx, -T * 0.3); g.lineTo(sx + T * 0.4, T * 0.1); g.stroke(); }
-    g.fillStyle = "#ff8a2a"; g.beginPath(); g.ellipse(L / 2 - T * 0.2, 0, T * 0.25, T * 0.42, 0, 0, 6.3); g.fill();
-    g.restore();
-  });
-
-  // Heavy oak doors, swung open inward toward the fire
-  const plankTones = [[104, 66, 36], [92, 58, 31], [112, 72, 40], [86, 54, 29]];
-  [-1, 1].forEach((side) => {
-    const x0 = cx + side * r, x1 = cx + side * r * 0.44;           // hinge edge, free edge
-    const yT0 = dTop + r * 0.32, yT1 = dTop + r * 0.62, yB0 = h, yB1 = h - dw * 0.06;
-    const leaf = new Path2D();
-    leaf.moveTo(x0, yB0); leaf.lineTo(x0, yT0); leaf.quadraticCurveTo((x0 + x1) / 2, dTop + r * 0.28, x1, yT1); leaf.lineTo(x1, yB1); leaf.closePath();
-    g.save(); g.clip(leaf);
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const planks = 4;
-    for (let p = 0; p < planks; p++) {
-      const t0 = p / planks, t1 = (p + 1) / planks;
-      const px0 = lerp(x0, x1, t0), px1 = lerp(x0, x1, t1);
-      const rgb = plankTones[p % plankTones.length];
-      g.fillStyle = `rgb(${clamp255(rgb[0] * dim)},${clamp255(rgb[1] * dim)},${clamp255(rgb[2] * dim)})`;
-      g.beginPath(); g.moveTo(px0, yT0 - 20); g.lineTo(px1, yT0 - 20); g.lineTo(px1, h); g.lineTo(px0, h); g.closePath(); g.fill();
-      // Wood grain: fine wavering lines running down the plank
-      for (let l = 0; l < 7; l++) {
-        const gx = lerp(px0, px1, (l + 0.5) / 7), ph = rnd() * 6;
-        g.strokeStyle = `rgba(28,14,5,${0.25 + rnd() * 0.25})`; g.lineWidth = 0.6;
-        g.beginPath(); g.moveTo(gx, yT0 - 20);
-        for (let yy = yT0 - 20; yy <= h; yy += 6) g.lineTo(gx + Math.sin(yy / 14 + ph) * Math.abs(px1 - px0) * 0.06, yy);
-        g.stroke();
-      }
-      if (rnd() < 0.6) {
-        const kx = lerp(px0, px1, 0.3 + rnd() * 0.4), ky = lerp(yT1, h, 0.2 + rnd() * 0.6), kr = Math.abs(px1 - px0) * 0.18;
-        g.fillStyle = "rgba(30,15,5,0.55)"; g.beginPath(); g.ellipse(kx, ky, kr * 0.6, kr, 0, 0, 6.3); g.fill();
-        g.strokeStyle = "rgba(30,15,5,0.35)"; g.beginPath(); g.ellipse(kx, ky, kr * 1.1, kr * 1.8, 0, 0, 6.3); g.stroke();
-      }
-      // Seam between planks
-      g.strokeStyle = "rgba(15,8,3,0.7)"; g.lineWidth = 1.2; g.beginPath(); g.moveTo(px1, yT0 - 20); g.lineTo(px1, h); g.stroke();
-    }
-    // Long wood fibers from stretched noise
-    g.globalCompositeOperation = "multiply"; g.globalAlpha = 0.45;
-    g.drawImage(grainTex, 0, 0, w * 0.8, h * 0.06, Math.min(x0, x1), yT0 - 20, Math.abs(x1 - x0), h - yT0 + 20);
-    g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
-    // Wrought-iron straps with rivets
-    [0.3, 0.75].forEach((f) => {
-      const ya = lerp(yT0, yB0, f), yb = lerp(yT1, yB1, f), bh = dw * 0.035;
-      g.fillStyle = "#2a2826"; g.beginPath(); g.moveTo(x0, ya - bh / 2); g.lineTo(x1, yb - bh * 0.35); g.lineTo(x1, yb + bh * 0.35); g.lineTo(x0, ya + bh / 2); g.closePath(); g.fill();
-      g.strokeStyle = "rgba(255,200,150,0.22)"; g.lineWidth = 0.8; g.beginPath(); g.moveTo(x0, ya - bh / 2); g.lineTo(x1, yb - bh * 0.35); g.stroke();
-      for (let k = 1; k < 5; k++) { const t = k / 5; g.fillStyle = "#4a4643"; g.beginPath(); g.arc(lerp(x0, x1, t), lerp(ya, yb, t), bh * 0.22, 0, 6.3); g.fill(); }
-    });
-    // Iron ring handle near the free edge
-    const hx = lerp(x0, x1, 0.85), hy = lerp(lerp(yT0, yB0, 0.55), lerp(yT1, yB1, 0.55), 0.85);
-    g.strokeStyle = "#1e1c1a"; g.lineWidth = dw * 0.012; g.beginPath(); g.ellipse(hx, hy + dw * 0.03, dw * 0.018, dw * 0.03, 0, 0, 6.3); g.stroke();
-    // Firelight on the doors: bright at the free edge, dark toward the hinge
-    const lit = g.createLinearGradient(x1, 0, x0, 0);
-    lit.addColorStop(0, "rgba(255,150,60,0.35)"); lit.addColorStop(1, "rgba(0,0,0,0.45)");
-    g.fillStyle = lit; g.fillRect(Math.min(x0, x1), yT0 - 20, Math.abs(x1 - x0), h);
-    g.restore();
-    g.strokeStyle = "rgba(10,5,2,0.8)"; g.lineWidth = 1.5; g.stroke(leaf);
-  });
-  // Shadow just inside the stone frame
-  g.lineWidth = dw * 0.12; g.strokeStyle = "rgba(0,0,0,0.45)"; g.stroke(door);
-  g.restore();
-
-  // Narrow arched windows with candlelight
-  const wins = [];
-  if (opts.windows !== false) {
-    [w * 0.22, w * 0.78].forEach((wx) => {
-      const ww = w * 0.032, wt = h * 0.4, wh = ww * 2.6, f = ww * 0.45;
-      g.fillStyle = mortar;
-      g.beginPath(); g.moveTo(wx - ww / 2 - f, wt + wh + f); g.lineTo(wx - ww / 2 - f, wt + ww / 2); g.arc(wx, wt + ww / 2, ww / 2 + f, Math.PI, 0); g.lineTo(wx + ww / 2 + f, wt + wh + f); g.closePath(); g.fill();
-      const p = new Path2D(); p.moveTo(wx - ww / 2, wt + wh); p.lineTo(wx - ww / 2, wt + ww / 2); p.arc(wx, wt + ww / 2, ww / 2, Math.PI, 0); p.lineTo(wx + ww / 2, wt + wh); p.closePath();
-      const lg = g.createLinearGradient(0, wt, 0, wt + wh); lg.addColorStop(0, "#f6b25c"); lg.addColorStop(1, "#8a3c12");
-      g.fillStyle = lg; g.fill(p);
-      wins.push({ x: wx, y: wt + wh * 0.55, r: ww * 3 });
-    });
-  }
-
-  // Edge darkening and film grain
-  const vig = g.createRadialGradient(w / 2, h * 0.6, Math.min(w, h) * 0.3, w / 2, h * 0.6, Math.max(w, h) * 0.75);
-  vig.addColorStop(0, "rgba(0,0,0,0)"); vig.addColorStop(1, night ? "rgba(0,0,0,0.55)" : "rgba(30,18,8,0.38)");
-  g.fillStyle = vig; g.fillRect(0, 0, w, h);
-  g.globalCompositeOperation = "overlay"; g.fillStyle = g.createPattern(grain(), "repeat"); g.fillRect(0, 0, w, h);
-  g.globalCompositeOperation = "source-over";
-  return { base, door, cx, dw, h, w, wins, night };
-}
-
-const arts = [];
-function addArt(el, opts) {
-  const c = document.createElement("canvas"); el.appendChild(c);
-  arts.push({ el, c, ctx: c.getContext("2d"), opts, scene: null, key: "" });
-}
-function drawArt(a, t) {
-  const w = a.el.clientWidth, h = a.el.clientHeight;
-  if (!w || !h) return;
-  const dpr = Math.min(2, window.devicePixelRatio || 1), key = `${w}x${h}x${dpr}x${isNight()}`;
-  if (a.key !== key) {
-    a.c.width = Math.round(w * dpr); a.c.height = Math.round(h * dpr);
-    a.scene = paintWall(w, h, a.opts, dpr); a.key = key; a.drawnStatic = false;
-  }
-  if (reduceMotion && a.drawnStatic) return;
-  const s = a.scene, g = a.ctx, f = reduceMotion ? 0.9 : 0.8 + 0.09 * Math.sin(t / 170) + 0.06 * Math.sin(t / 63 + 1.3) + 0.05 * Math.sin(t / 29 + 0.4);
-  const k = s.night ? 1.3 : 0.85;
-  g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g.globalCompositeOperation = "source-over"; g.drawImage(s.base, 0, 0, w, h);
-  // Firelight washing over the nearby stones
-  g.globalCompositeOperation = "lighter";
-  const wash = g.createRadialGradient(s.cx, h, 0, s.cx, h, w * 0.55);
-  wash.addColorStop(0, `rgba(255,140,50,${0.3 * f * k})`); wash.addColorStop(0.45, `rgba(200,90,30,${0.1 * f * k})`); wash.addColorStop(1, "rgba(0,0,0,0)");
-  g.fillStyle = wash; g.fillRect(0, 0, w, h);
-  // The fire: layered flame tongues (red edges, orange body, yellow core) and rising sparks
-  g.save(); g.clip(s.door);
-  const by = h - s.dw * 0.075, spread = s.dw * 0.2;
-  const pool = g.createRadialGradient(s.cx, by, 0, s.cx, by, s.dw * 0.45);
-  pool.addColorStop(0, `rgba(255,190,90,${0.55 * f})`); pool.addColorStop(1, "rgba(0,0,0,0)");
-  g.fillStyle = pool; g.fillRect(s.cx - s.dw / 2, by - s.dw * 0.45, s.dw, s.dw * 0.5);
-  const layers = [[[210, 60, 15], 1, 1, 0.55], [[255, 130, 35], 0.75, 0.8, 0.7], [[255, 220, 130], 0.48, 0.55, 0.85]];
-  layers.forEach(([rgb, hk, wk, a]) => {
-    for (let i = 0; i < 7; i++) {
-      const off = (i - 3) / 3, ph = i * 1.7 + hk * 3;
-      const flick = reduceMotion ? 1 : 0.82 + 0.16 * Math.sin(t / (70 + i * 13) + ph) + 0.09 * Math.sin(t / 23 + ph * 2);
-      const fh = s.dw * (0.5 - Math.abs(off) * 0.22) * hk * flick;
-      const fw = s.dw * 0.11 * wk;
-      const fx = s.cx + off * spread * (0.6 + hk * 0.4);
-      const sway = reduceMotion ? 0 : Math.sin(t / (95 + i * 11) + ph) * fw * 0.7;
-      const fg = g.createLinearGradient(0, by, 0, by - fh);
-      fg.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`);
-      fg.addColorStop(0.55, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a * 0.55})`);
-      fg.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
-      g.fillStyle = fg;
-      g.beginPath(); g.moveTo(fx - fw / 2, by);
-      g.bezierCurveTo(fx - fw / 2, by - fh * 0.45, fx + sway - fw * 0.18, by - fh * 0.72, fx + sway, by - fh);
-      g.bezierCurveTo(fx + sway + fw * 0.18, by - fh * 0.72, fx + fw / 2, by - fh * 0.45, fx + fw / 2, by);
-      g.closePath(); g.fill();
-    }
-  });
-  if (!reduceMotion) {
-    s.sparks = s.sparks || [];
-    if (Math.random() < 0.35) s.sparks.push({ x: s.cx + (Math.random() - 0.5) * spread, y: by - s.dw * 0.1, vx: (Math.random() - 0.5) * 0.4, vy: -(0.6 + Math.random() * 0.9), life: 1 });
-    s.sparks = s.sparks.filter((p) => (p.life -= 0.02) > 0);
-    s.sparks.forEach((p) => {
-      p.x += p.vx + Math.sin(t / 200 + p.y) * 0.2; p.y += p.vy * (s.dw / 120);
-      g.fillStyle = `rgba(255,${180 + Math.round(60 * p.life)},90,${p.life})`;
-      g.beginPath(); g.arc(p.x, p.y, 0.6 + p.life * 0.9, 0, 6.3); g.fill();
-    });
-  }
-  g.restore();
-  // Candle glow at the windows
-  s.wins.forEach((wn, i) => {
-    const wf = reduceMotion ? 0.9 : 0.85 + 0.15 * Math.sin(t / (110 + i * 40) + i * 2);
-    const wg = g.createRadialGradient(wn.x, wn.y, 0, wn.x, wn.y, wn.r);
-    wg.addColorStop(0, `rgba(255,170,80,${0.35 * wf * k})`); wg.addColorStop(1, "rgba(0,0,0,0)");
-    g.fillStyle = wg; g.fillRect(wn.x - wn.r, wn.y - wn.r, wn.r * 2, wn.r * 2);
-  });
-  g.globalCompositeOperation = "source-over";
-  a.drawnStatic = true;
-}
-let lastFrame = 0;
-function artLoop(t) {
-  if (t - lastFrame > 50) { lastFrame = t; arts.forEach((a) => drawArt(a, t)); }
-  requestAnimationFrame(artLoop);
-}
 // Emblem: a stone shield with battlements and a firelit arched doorway.
 function brandMark() {
   const shield = "M3 9H7.5V4H13V9H17.2V4H22.8V9H27V4H32.5V9H37V25C37 35 29.5 41.5 20 45C10.5 41.5 3 35 3 25Z";
@@ -808,10 +483,6 @@ function brandMark() {
   </svg>`;
 }
 document.querySelectorAll(".mark").forEach((el) => (el.innerHTML = brandMark()));
-addArt($("hero-art"), { seed: 7, door: 0.17, top: 0.26 });
-addArt($("f-art"), { seed: 21, door: 0.11, top: 0.3, doorTop: 0.4 });
-addArt($("k-art"), { seed: 33, door: 0.11, top: 0.3, doorTop: 0.4, windows: false });
-requestAnimationFrame(artLoop);
 
 /* ---------- content ---------- */
 const HELP = {
