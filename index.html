@@ -176,11 +176,10 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .thumb { aspect-ratio: 1; overflow: hidden; border-radius: 10px; background: var(--surface); display: block; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; }
 /* Zoom in on the chest crest and its "Frankie's Fortress" wording */
-.crest img { transform: scale(2.3); transform-origin: 50% 44%; }
+.crest img { object-position: center; }
 .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .gallery .wide { grid-column: 1 / -1; }
-.zoom.crest { aspect-ratio: 2 / 1; }
-.zoom.crest img { height: 100%; object-fit: cover; transform: scale(2.4); transform-origin: 50% 44%; }
+.zoom.crest { aspect-ratio: 180 / 145; width: 100%; max-width: 360px; align-self: center; }
 .gallery figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .gallery figcaption { font-size: 0.88rem; color: var(--muted); text-align: center; }
 .zoom { padding: 0; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); overflow: hidden; cursor: zoom-in; }
@@ -253,9 +252,9 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
     <a class="sheet warm shop-teaser" href="#shop">
       <div class="thumbs">
-        <span class="thumb"><img src="images/hoodie-front.png" alt="Front of the hoodie: a small colorful crest above the words Frankie's Fortress."></span>
-        <span class="thumb crest"><img src="images/hoodie-front.png" alt="Close-up of the Frankie's Fortress crest on the chest."></span>
-        <span class="thumb"><img src="images/hoodie-back.png" alt="Back of the hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></span>
+        <span class="thumb"><img src="images/hoodie-front.jpg" alt="Front of the hoodie: a small colorful crest above the words Frankie's Fortress."></span>
+        <span class="thumb crest"><img src="images/hoodie-crest.jpg" alt="Close-up of the Frankie's Fortress crest on the chest."></span>
+        <span class="thumb"><img src="images/hoodie-back.jpg" alt="Back of the hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></span>
       </div>
       <div class="stack" style="gap:6px">
         <span class="label">Wear the message</span>
@@ -455,9 +454,9 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <p class="muted">A hoodie that says what so many people need to hear. Every one sold helps fund suicide prevention.</p>
     </div>
     <div class="gallery">
-      <figure><button type="button" class="zoom" data-src="images/hoodie-back.png" data-alt="Back of the hoodie"><img src="images/hoodie-back.png" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></button><figcaption>Back: the full painting</figcaption></figure>
-      <figure><button type="button" class="zoom" data-src="images/hoodie-front.png" data-alt="Front of the hoodie"><img src="images/hoodie-front.png" alt="Front of a gray hoodie with a small colorful crest and the words Frankie's Fortress."></button><figcaption>Front: the Frankie's Fortress crest</figcaption></figure>
-      <figure class="wide"><button type="button" class="zoom crest" data-src="images/hoodie-front.png" data-alt="Front of the hoodie"><img src="images/hoodie-front.png" alt="Close-up of the colorful crest on the chest, with the words Frankie's Fortress beneath it."></button><figcaption>Close-up: the crest and "Frankie's Fortress" on the chest</figcaption></figure>
+      <figure><button type="button" class="zoom" data-src="images/hoodie-back.jpg" data-alt="Back of the hoodie"><img src="images/hoodie-back.jpg" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></button><figcaption>Back: the full painting</figcaption></figure>
+      <figure><button type="button" class="zoom" data-src="images/hoodie-front.jpg" data-alt="Front of the hoodie"><img src="images/hoodie-front.jpg" alt="Front of a gray hoodie with a small colorful crest and the words Frankie's Fortress."></button><figcaption>Front: the Frankie's Fortress crest</figcaption></figure>
+      <figure class="wide"><button type="button" class="zoom crest" data-src="images/hoodie-crest.jpg" data-alt="Close-up of the crest"><img src="images/hoodie-crest.jpg" alt="Close-up of the colorful crest on the chest, with the words Frankie's Fortress beneath it."></button><figcaption>Close-up: the crest and "Frankie's Fortress" on the chest</figcaption></figure>
     </div>
     <div class="sheet">
       <h3>About the art</h3>
