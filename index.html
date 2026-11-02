@@ -143,6 +143,17 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
 .modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
 
+/* Featured call-out for "What families say helps" */
+.feature {
+  display: flex; flex-direction: column; gap: 12px; padding: 22px 20px; border-radius: var(--r);
+  background: linear-gradient(160deg, var(--hearth-soft), var(--surface) 85%);
+  border: 1.5px solid var(--hearth); border-left-width: 6px;
+  text-decoration: none; color: inherit; box-shadow: 0 6px 18px rgba(120, 60, 15, 0.12);
+}
+.feature h2 { font-size: 1.6rem; }
+.lessons { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.lessons li { padding-left: 26px; position: relative; font-weight: 600; }
+.lessons li::before { content: ""; position: absolute; left: 4px; top: 0.55em; width: 10px; height: 10px; border-radius: 50%; background: var(--hearth); box-shadow: 0 0 0 4px var(--hearth-soft); }
 .finding { display: flex; flex-direction: column; gap: 8px; }
 .finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
 .finding .src { font-size: 0.8rem; color: var(--muted); }
@@ -209,9 +220,9 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       </button>
     </div>
     <nav class="menu" id="menu" hidden>
+      <a href="#voices"><strong>What families say helps</strong></a>
       <a href="#fortress">See an example Fortress</a>
       <a href="#guide">How to help a family</a>
-      <a href="#voices">What helped us</a>
       <a href="#shop">Wear the message</a>
       <a href="#resources">Resources</a>
       <a href="#frankie">In honor of Frankie</a>
@@ -230,6 +241,17 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       </figure>
       <p>When a family is going through a mental health or substance use crisis, or grieving a loss, shame often keeps them from asking for help. Frankie's Fortress lets the people who love them show up with meals, rides and kindness, without anyone needing to explain.</p>
     </div>
+
+    <a class="feature" href="#voices">
+      <span class="label">Not sure what to say?</span>
+      <h2>Learn what actually helps, from families who've been there.</h2>
+      <ul class="lessons">
+        <li>Reach out first, and keep reaching out</li>
+        <li>Saying something is better than saying nothing</li>
+        <li>Listen more than you advise</li>
+      </ul>
+      <span class="btn hearth" style="align-self:flex-start">Read what helps</span>
+    </a>
 
     <div class="sheet">
       <h2>How it works</h2>
@@ -255,12 +277,6 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <h2>For hard seasons, and for grief</h2>
       <p>A Fortress can support a family during an active crisis, or after they've lost someone they love to suicide, overdose or illness. Grief after these losses is often lonely. Steady, quiet support helps more than people know.</p>
     </div>
-
-    <a class="sheet" href="#voices" style="text-decoration:none;color:inherit">
-      <span class="label">What helped us</span>
-      <h3>Not sure what to say?</h3>
-      <p>Hear from families who've been through it, and what the research says actually helps. <span style="color:var(--accent);font-weight:700">Read more ›</span></p>
-    </a>
 
     <a class="sheet warm shop-teaser" href="#shop">
       <div class="thumbs">
@@ -369,10 +385,11 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div id="f-banner"></div>
     <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 54%"></div>
     <div class="f-head" id="f-head"></div>
-    <a class="sheet green" href="#guide" style="text-decoration:none;color:inherit">
+    <div class="feature">
       <span class="label">Before you help</span>
-      <p>Please don't ask what happened. Just show up, gently and steadily. <span style="color:var(--accent);font-weight:700">Read how to help ›</span></p>
-    </a>
+      <p>Please don't ask what happened. Just show up, gently and steadily. If you're not sure what to say, you're not alone. Families who've been through this share what helped them.</p>
+      <div class="row"><a class="btn hearth" href="#voices">What families say helps</a><a class="btn ghost" href="#guide">How to help</a></div>
+    </div>
     <div class="stack" id="f-slots"></div>
     <div class="stack" id="f-ongoing"></div>
     <div class="sheet" id="f-notes-wrap">
@@ -758,6 +775,7 @@ function openSignup(s) {
         ${F.dropoff ? `<p>${esc(F.dropoff)}</p>` : ""}
       </div>
       <p class="small muted">Please keep this address private. In the full version, you'll get a reminder the day before.</p>
+      <p class="small">Not sure what to say when you're there? <a href="#voices">See what families say helps</a>.</p>
       <div class="row"><button id="m-done">Done</button></div>`;
     $("m-done").onclick = closeModal;
   };
