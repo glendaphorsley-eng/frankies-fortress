@@ -154,6 +154,29 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .lessons { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .lessons li { padding-left: 26px; position: relative; font-weight: 600; }
 .lessons li::before { content: ""; position: absolute; left: 4px; top: 0.55em; width: 10px; height: 10px; border-radius: 50%; background: var(--hearth); box-shadow: 0 0 0 4px var(--hearth-soft); }
+/* Notes with photos */
+.note-photo { display: block; width: 100%; max-height: 340px; object-fit: cover; border-radius: 10px; margin-bottom: 6px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Candles */
+.candle-wrap { background: linear-gradient(180deg, var(--surface), var(--hearth-soft)); }
+.candles { display: flex; flex-wrap: wrap; gap: 14px 12px; min-height: 52px; align-items: flex-end; padding-top: 18px; }
+.candle { position: relative; width: 12px; height: 30px; border-radius: 2px 2px 3px 3px; background: linear-gradient(90deg, #efe6d6, #fffaf0 45%, #d9cbb3); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.candle::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 1.5px; height: 4px; background: #3a2a1c; transform: translateX(-50%); }
+.candle::after {
+  content: ""; position: absolute; left: 50%; bottom: calc(100% + 3px); width: 8px; height: 14px; transform: translateX(-50%);
+  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+  background: radial-gradient(ellipse at 50% 75%, #fff8d8 0%, #ffd27a 35%, #f39437 70%, rgba(243, 148, 55, 0) 100%);
+  box-shadow: 0 0 12px 4px rgba(255, 170, 70, 0.45);
+  animation: candleFlicker 2.2s ease-in-out infinite alternate; animation-delay: inherit;
+}
+.candle.new::after { box-shadow: 0 0 18px 7px rgba(255, 170, 70, 0.65); }
+@keyframes candleFlicker {
+  0% { transform: translateX(-50%) scale(1, 1); opacity: 0.92; }
+  40% { transform: translateX(-52%) scale(0.94, 1.06); opacity: 1; }
+  70% { transform: translateX(-48%) scale(1.04, 0.95); opacity: 0.88; }
+  100% { transform: translateX(-50%) scale(0.97, 1.03); opacity: 0.97; }
+}
+@media (prefers-reduced-motion: reduce) { .candle::after { animation: none; } }
 .finding { display: flex; flex-direction: column; gap: 8px; }
 .finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
 .finding .src { font-size: 0.8rem; color: var(--muted); }
@@ -392,11 +415,26 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     </div>
     <div class="stack" id="f-slots"></div>
     <div class="stack" id="f-ongoing"></div>
+    <div class="sheet candle-wrap">
+      <h2 id="c-title">Light a candle</h2>
+      <p class="small muted" id="c-sub"></p>
+      <div class="candles" id="candles" aria-hidden="true"></div>
+      <p id="c-count"></p>
+      <div class="row"><button class="hearth" id="c-light">Light a candle</button></div>
+    </div>
+
     <div class="sheet" id="f-notes-wrap">
-      <h2>Kind words</h2>
-      <p class="small muted">The family reads these when they can. Please don't ask questions, and don't expect a reply.</p>
+      <h2>Kind words and photos</h2>
+      <p class="small muted">Share a note, a photo, or both. The family reads these when they can. Please don't ask questions, and don't expect a reply.</p>
       <div class="stack" id="f-notes"></div>
-      <div class="field"><label for="n-text">Leave a note</label><textarea id="n-text" placeholder="Thinking of you today. No need to reply."></textarea></div>
+      <div class="field"><label for="n-text">Leave a note <span class="muted small">(optional if you add a photo)</span></label><textarea id="n-text" placeholder="Thinking of you today. No need to reply."></textarea></div>
+      <div class="field">
+        <span style="font-weight:700;font-size:0.95rem">Add a photo <span class="muted small" style="font-weight:400">(optional)</span></span>
+        <p class="small muted">A candle you lit, flowers, a sunrise, a place that made you think of them. Please share only photos you're happy for the family to keep.</p>
+        <input type="file" id="n-photo" accept="image/*" class="visually-hidden">
+        <div class="row"><label for="n-photo" class="btn ghost" style="font-size:0.95rem;padding:9px 14px;cursor:pointer">Choose a photo</label><button type="button" class="ghost" id="n-photo-clear" hidden style="font-size:0.9rem;padding:8px 12px">Remove photo</button></div>
+        <img id="n-photo-preview" class="note-photo" alt="The photo you chose" hidden>
+      </div>
       <div class="chips" id="n-ideas"></div>
       <div class="field"><label for="n-name">Sign it as <span class="muted small">(leave blank to sign as "A friend")</span></label><input type="text" id="n-name"></div>
       <div class="row"><button id="n-send">Leave this note</button></div>
@@ -679,7 +717,7 @@ const exampleNotes = (season) => season === "loss"
   : [{ text: "Thinking of you all every day. No need to reply.", by: "Jen M." },
      { text: "We love you. We're not going anywhere.", by: "The Parkers" }];
 
-let F = exampleFortress("hard"), slots = makeSlots(F.helps), notes = exampleNotes("hard"), prayers = 6, prayed = false;
+let F = exampleFortress("hard"), slots = makeSlots(F.helps), notes = exampleNotes("hard"), prayers = 6, prayed = false, candles = 9, lit = false;
 
 /* ---------- fortress page ---------- */
 const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
@@ -721,7 +759,22 @@ function renderFortress() {
     <div class="row"><button class="${prayed ? "ghost" : ""}" id="pray" ${prayed ? "disabled" : ""}>${prayed ? "You're praying for them" : "I'm praying for them"}</button></div></div>`);
   $("f-ongoing").innerHTML = og.length ? `<h2>Anytime ways to help</h2>` + og.join("") : "";
 
-  $("f-notes").innerHTML = notes.map((n) => `<div class="note-card"><p>${esc(n.text)}</p><span class="by">— ${esc(n.by)}</span></div>`).join("");
+  $("f-notes").innerHTML = notes.map((n) => `<div class="note-card">
+      ${n.photo ? `<img class="note-photo" src="${n.photo}" alt="A photo shared by ${esc(n.by)}">` : ""}
+      ${n.text ? `<p>${esc(n.text)}</p>` : ""}
+      <span class="by">— ${esc(n.by)}</span></div>`).join("");
+  // Candles: one small flame for each candle lit, up to a full row
+  const loss = F.season === "loss";
+  $("c-title").textContent = loss ? "Light a candle in memory" : "Light a candle";
+  $("c-sub").textContent = loss
+    ? "Light a candle in memory of the one they love, and to let the family know you're holding them in your heart."
+    : "Light a candle to let the family know you're thinking of them.";
+  $("candles").innerHTML = Array.from({ length: Math.min(candles, 24) }, (_, i) =>
+    `<span class="candle${lit && i === candles - 1 ? " new" : ""}" style="animation-delay:${(i * 0.37) % 2}s"></span>`).join("");
+  $("c-count").textContent = candles === 0 ? "Be the first to light a candle."
+    : `${candles} ${candles === 1 ? "candle has" : "candles have"} been lit for this family.`;
+  $("c-light").disabled = lit;
+  $("c-light").textContent = lit ? "Your candle is lit" : "Light a candle";
   $("n-ideas").innerHTML = NOTE_IDEAS[F.season].map((t) => `<button type="button" class="chip" data-idea="${esc(t)}">${esc(t)}</button>`).join("");
 }
 
@@ -738,10 +791,42 @@ $("f-ongoing").addEventListener("click", (e) => {
     .catch(() => { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); });
 });
 $("n-ideas").addEventListener("click", (e) => { const t = e.target.dataset.idea; if (t) $("n-text").value = t; });
+$("c-light").onclick = () => { if (!lit) { candles++; lit = true; renderFortress(); } };
+
+// Photos are shrunk on the phone before sharing, so large camera photos stay quick to load.
+let notePhoto = null;
+function shrinkPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, 1200 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(); };
+    img.src = url;
+  });
+}
+$("n-photo").addEventListener("change", async () => {
+  const file = $("n-photo").files[0]; if (!file) return;
+  try {
+    notePhoto = await shrinkPhoto(file);
+    $("n-photo-preview").src = notePhoto; $("n-photo-preview").hidden = false; $("n-photo-clear").hidden = false;
+  } catch (e) {
+    notePhoto = null; $("n-photo-preview").hidden = true;
+    $("n-text").placeholder = "That photo couldn't be opened. Please try a different one.";
+  }
+});
+function clearPhoto() { notePhoto = null; $("n-photo").value = ""; $("n-photo-preview").hidden = true; $("n-photo-clear").hidden = true; }
+$("n-photo-clear").onclick = clearPhoto;
 $("n-send").onclick = () => {
-  const text = $("n-text").value.trim(); if (!text) { $("n-text").focus(); return; }
-  notes.unshift({ text: text.slice(0, 600), by: $("n-name").value.trim().slice(0, 40) || "A friend" });
-  $("n-text").value = ""; renderFortress();
+  const text = $("n-text").value.trim();
+  if (!text && !notePhoto) { $("n-text").focus(); return; }
+  notes.unshift({ text: text.slice(0, 600), photo: notePhoto, by: $("n-name").value.trim().slice(0, 40) || "A friend" });
+  $("n-text").value = ""; clearPhoto(); renderFortress();
 };
 
 /* ---------- sign-up ---------- */
@@ -805,11 +890,11 @@ $("c-helps").addEventListener("click", (e) => {
 });
 // The example family and your own preview are kept apart, so neither can replace the other.
 let exSeason = "hard", exampleState = null, previewState = null;
-function useState(st) { ({ F, slots, notes, prayers, prayed } = st); renderFortress(); }
-function saveCurrent() { const st = { F, slots, notes, prayers, prayed }; F.example ? (exampleState = st) : (previewState = st); }
+function useState(st) { ({ F, slots, notes, prayers, prayed, candles, lit } = st); renderFortress(); }
+function saveCurrent() { const st = { F, slots, notes, prayers, prayed, candles, lit }; F.example ? (exampleState = st) : (previewState = st); }
 function showExample(reset) {
   if (!F.example) saveCurrent();
-  if (reset || !exampleState) { const ex = exampleFortress(exSeason); exampleState = { F: ex, slots: makeSlots(ex.helps), notes: exampleNotes(exSeason), prayers: 6, prayed: false }; }
+  if (reset || !exampleState) { const ex = exampleFortress(exSeason); exampleState = { F: ex, slots: makeSlots(ex.helps), notes: exampleNotes(exSeason), prayers: 6, prayed: false, candles: exSeason === "loss" ? 14 : 9, lit: false }; }
   useState(exampleState);
 }
 function buildPreview() {
@@ -822,7 +907,7 @@ function buildPreview() {
     helps: [...selectedHelps], noContact: $("c-nocontact").checked, dropoff: $("c-dropoff").value.trim().slice(0, 200),
     passcode: $("c-passcode").checked, showNames: $("c-names").checked, address: "",
   };
-  previewState = { F: pf, slots: expandNeeds(), notes: [], prayers: 0, prayed: false };
+  previewState = { F: pf, slots: expandNeeds(), notes: [], prayers: 0, prayed: false, candles: 0, lit: false };
 }
 function showPreview() {
   if (F.example) saveCurrent();
