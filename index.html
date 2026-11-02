@@ -143,6 +143,11 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
 .modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
 
+.finding { display: flex; flex-direction: column; gap: 8px; }
+.finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
+.finding .src { font-size: 0.8rem; color: var(--muted); }
+.finding .src a { color: inherit; }
+.note-soft { background: var(--hearth-soft); border-radius: 10px; padding: 10px 14px; font-size: 0.92rem; }
 .need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .need-grid > * { min-width: 0; }
 .need-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-left: 4px solid var(--hearth); border-radius: 10px; background: var(--bg); }
@@ -206,6 +211,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <nav class="menu" id="menu" hidden>
       <a href="#fortress">See an example Fortress</a>
       <a href="#guide">How to help a family</a>
+      <a href="#voices">What helped us</a>
       <a href="#shop">Wear the message</a>
       <a href="#resources">Resources</a>
       <a href="#frankie">In honor of Frankie</a>
@@ -249,6 +255,12 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <h2>For hard seasons, and for grief</h2>
       <p>A Fortress can support a family during an active crisis, or after they've lost someone they love to suicide, overdose or illness. Grief after these losses is often lonely. Steady, quiet support helps more than people know.</p>
     </div>
+
+    <a class="sheet" href="#voices" style="text-decoration:none;color:inherit">
+      <span class="label">What helped us</span>
+      <h3>Not sure what to say?</h3>
+      <p>Hear from families who've been through it, and what the research says actually helps. <span style="color:var(--accent);font-weight:700">Read more ›</span></p>
+    </a>
 
     <a class="sheet warm shop-teaser" href="#shop">
       <div class="thumbs">
@@ -414,6 +426,72 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
         <span class="no">"Let me know if you need anything."</span><span>"I'm dropping off soup Thursday at 6. I'll leave it on the porch."</span>
         <span class="no">"How are you doing?"</span><span>"Thinking of you today. No need to reply."</span>
       </div>
+    </div>
+    <a class="sheet green" href="#voices" style="text-decoration:none;color:inherit">
+      <span class="label" style="color:var(--accent)">Hear from families</span>
+      <p>What helped, and what didn't, in the words of families who've been there. <span style="color:var(--accent);font-weight:700">Read more ›</span></p>
+    </a>
+  </section>
+
+  <!-- VOICES -->
+  <section data-view="voices" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home" data-back>‹ Back</a><span class="label">What helped us</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>What helped us</h2>
+      <p class="muted">Most people want to help a family in crisis but don't know what to say. Here's what families who've been through it, and the researchers who listened to them, say actually helps.</p>
+    </div>
+
+    <div class="stack">
+      <h3>What families tell researchers</h3>
+      <p class="small muted">A summary of published studies of families after a suicide or overdose loss, and of families caring for someone with mental illness or addiction.</p>
+      <div class="stack" id="v-findings"></div>
+    </div>
+
+    <div class="sheet">
+      <h3>In their own words</h3>
+      <div class="placeholder" style="font-style:normal">
+        <p style="margin-bottom:8px"><strong>This space is waiting for the first stories.</strong></p>
+        <p>If your family has been through a mental health or substance use crisis, or the loss of someone you love, your words could help another family feel less alone, and help their friends know what to say.</p>
+      </div>
+      <a class="btn hearth" href="#share-story" id="v-share-link" style="align-self:flex-start">Share what helped you</a>
+    </div>
+
+    <div class="sheet" id="share-story">
+      <h3>Share your experience</h3>
+      <p class="small muted">Answer as many or as few questions as you like. Every story is read by a person before it's shared, and anything that could identify you or your family is removed.</p>
+      <div class="note-soft">Please leave out names, places, and any details about how someone died. If you're struggling right now, you can call or text <strong>988</strong> any time.</div>
+      <div class="need-grid">
+        <div class="field"><label for="v-situation">What your family went through</label>
+          <select id="v-situation">
+            <option value="">Choose one</option>
+            <option>A loved one's mental health crisis</option>
+            <option>A loved one's substance use</option>
+            <option>Losing someone to suicide</option>
+            <option>Losing someone to an overdose</option>
+            <option>Another loss</option>
+            <option>I'd rather not say</option>
+          </select>
+        </div>
+        <div class="field"><label for="v-role">You are their <span class="muted small">(optional)</span></label>
+          <select id="v-role">
+            <option value="">Choose one</option>
+            <option>Parent</option><option>Partner or spouse</option><option>Child</option><option>Sibling</option>
+            <option>Grandparent</option><option>Friend</option><option>I'd rather not say</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="v-helped">What helped you most?</label><textarea id="v-helped" placeholder="A neighbor mowed our lawn every week and never asked a single question."></textarea></div>
+      <div class="field"><label for="v-said">What did someone say or do that meant a lot?</label><textarea id="v-said"></textarea></div>
+      <div class="field"><label for="v-hurt">What hurt, even if it was meant kindly?</label><textarea id="v-hurt"></textarea></div>
+      <div class="field"><label for="v-wish">What do you wish people knew?</label><textarea id="v-wish"></textarea></div>
+      <span class="label">How should we credit you?</span>
+      <label class="check"><input type="radio" name="v-credit" value="anon" checked> <span>Anonymous</span></label>
+      <label class="check"><input type="radio" name="v-credit" value="name"> <span>A first name or initial</span></label>
+      <div class="field" id="v-name-wrap" hidden><label for="v-name">Name or initial</label><input type="text" id="v-name" placeholder="For example: M."></div>
+      <label class="check"><input type="checkbox" id="v-consent"> <span>I agree that my words may be lightly edited for privacy and shared on Frankie's Fortress.</span></label>
+      <p class="small" id="v-msg" style="color:var(--hearth-ink)"></p>
+      <div class="row"><button class="hearth" id="v-submit">Share my story</button></div>
+      <div id="v-done" hidden></div>
     </div>
   </section>
 
@@ -857,6 +935,64 @@ const saveDraftSoon = () => { clearTimeout(draftTimer); draftTimer = setTimeout(
 
 // "Back" links return to wherever the visitor came from.
 document.querySelectorAll("[data-back]").forEach((a) => a.addEventListener("click", (e) => { if (history.length > 1) { e.preventDefault(); history.back(); } }));
+
+/* ---------- what helped us: research findings and the sharing form ---------- */
+// Summaries are written in our own words; each links to its source.
+const FINDINGS = [
+  { title: "Reach out first, and keep reaching out",
+    text: "People bereaved by suicide said the support they valued most was offered to them, not support they had to ask for. Many weren't ready at first, so offers that were repeated over the following months mattered.",
+    try: "Don't wait to be asked. Offer something specific now, and offer again in a few weeks.",
+    src: [["Pitman et al., 2018, International Journal of Environmental Research and Public Health", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"]] },
+  { title: "Saying something is better than saying nothing",
+    text: "In a study of 3,432 young adults, people bereaved by suicide were less likely than others to get support right away. Researchers linked this to stigma and the awkwardness people feel. Silence and avoidance can feel like judgment.",
+    try: "An imperfect “I'm so sorry. I'm here” is far better than staying away because you don't know the right words.",
+    src: [["Pitman et al., 2017, BMJ Open", "https://discovery.ucl.ac.uk/id/eprint/1558270/"]] },
+  { title: "Listen more than you advise",
+    text: "In a well-known study of bereaved families, the responses people found least helpful were advice and being encouraged to “move on.” Among the most helpful were chances to talk openly about their feelings.",
+    try: "Ask “Do you want to talk about it?” and then mostly listen. Skip the advice unless they ask.",
+    src: [["Lehman, Ellard & Wortman, 1986, summarized in Pitman et al., 2018", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"]] },
+  { title: "After a drug or alcohol death, judgment deepens the grief",
+    text: "Researchers who studied families bereaved through drugs or alcohol found many met unkind or stigmatizing responses, which made their grief heavier and more isolating.",
+    try: "Talk about the person as a whole person: what they loved, who they were. Never blame them or the family.",
+    src: [["University of Stirling and University of Bath research, 2015", "https://stir.ac.uk/news/2015/06/drugs-alcohol-bereavement-guidelines"], ["Guidelines: Bereaved by substance use", "https://www.bath.ac.uk/announcements/new-guidelines-to-support-people-bereaved-by-alcohol-or-drugs/"]] },
+  { title: "People who've been there help in a special way",
+    text: "Bereaved people often named contact with others who had lived through something similar as one of the most helpful kinds of support. Peer support groups are valued for the same reason.",
+    try: "Gently share a support group or a friend who's been through it. Offer to drive them to the first meeting.",
+    src: [["Pitman et al., 2018", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"], ["University of Bath family case study", "https://www.bath.ac.uk/case-studies/how-one-familys-loss-is-helping-others/"]] },
+  { title: "Families in crisis often go it alone",
+    text: "People caring for a loved one with mental health or addiction problems report more stress, loneliness and isolation than other caregivers. Stigma often keeps them from reaching out, and family support groups have been found to ease that loneliness.",
+    try: "Assume they need you even if they don't say so. Quiet, practical help lets them accept support without explaining anything.",
+    src: [["Carleton University, Canadian caregiver study", "https://carleton.ca/determinants/2017/the-emotional-health-and-well%e2%80%90being-of-canadians-who-care-for-persons-with-mental-health-or-addictions-problems"], ["Study of family caregivers for substance use disorder, Pakistan","https://www.jamc.ayubmed.edu.pk/index.php/jamc/article/view/14248"]] },
+];
+$("v-findings").innerHTML = FINDINGS.map((f) => `<div class="sheet finding">
+    <h3>${esc(f.title)}</h3>
+    <p>${esc(f.text)}</p>
+    <p class="try"><strong>What you can do:</strong> ${esc(f.try)}</p>
+    <p class="src">Source: ${f.src.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ")}</p>
+  </div>`).join("");
+
+$("v-share-link").onclick = (e) => { e.preventDefault(); $("share-story").scrollIntoView({ behavior: "smooth", block: "start" }); };
+document.querySelectorAll('input[name="v-credit"]').forEach((r) => r.addEventListener("change", () => {
+  $("v-name-wrap").hidden = document.querySelector('input[name="v-credit"]:checked').value !== "name";
+}));
+// Words that suggest the writer may be in danger right now. If found, we point them to help first.
+const STRUGGLE_RE = /\b(kill myself|end my life|want to die|wanna die|don'?t want to (be here|live)|no reason to live|suicidal|hurt myself|better off without me)\b/i;
+$("v-submit").onclick = () => {
+  const answers = ["v-helped", "v-said", "v-hurt", "v-wish"].map((id) => $(id).value.trim());
+  if (!answers.some(Boolean)) { $("v-msg").textContent = "Please answer at least one question."; $("v-helped").focus(); return; }
+  if (!$("v-consent").checked) { $("v-msg").textContent = "Please tick the box to agree that your words may be shared."; $("v-consent").focus(); return; }
+  $("v-msg").textContent = "";
+  const struggling = STRUGGLE_RE.test(answers.join(" "));
+  $("v-done").hidden = false;
+  $("v-done").innerHTML = `
+    ${struggling ? `<div class="sheet warm"><h3>We're glad you're here.</h3><p>Some of what you wrote sounds like you might be hurting right now. You don't have to carry it alone. Please call or text <strong>988</strong>, any time, day or night, to talk with someone who cares.</p></div>` : ""}
+    <div class="sheet green">
+      <h3>Thank you for sharing.</h3>
+      <p>Your words could help another family feel less alone. In the full site, a person would read your story and remove anything identifying before it's shared.</p>
+      <p class="small muted">This is a preview, so nothing was sent or saved.</p>
+    </div>`;
+  $("v-done").scrollIntoView({ behavior: "smooth", block: "nearest" });
+};
 
 /* ---------- header menu ---------- */
 function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
