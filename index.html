@@ -157,26 +157,17 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 /* Notes with photos */
 .note-photo { display: block; width: 100%; max-height: 340px; object-fit: cover; border-radius: 10px; margin-bottom: 6px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* Candles */
-.candle-wrap { background: linear-gradient(180deg, var(--surface), var(--hearth-soft)); }
-.candles { display: flex; flex-wrap: wrap; gap: 14px 12px; min-height: 52px; align-items: flex-end; padding-top: 18px; }
-.candle { position: relative; width: 12px; height: 30px; border-radius: 2px 2px 3px 3px; background: linear-gradient(90deg, #efe6d6, #fffaf0 45%, #d9cbb3); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-.candle::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 1.5px; height: 4px; background: #3a2a1c; transform: translateX(-50%); }
-.candle::after {
-  content: ""; position: absolute; left: 50%; bottom: calc(100% + 3px); width: 8px; height: 14px; transform: translateX(-50%);
-  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
-  background: radial-gradient(ellipse at 50% 75%, #fff8d8 0%, #ffd27a 35%, #f39437 70%, rgba(243, 148, 55, 0) 100%);
-  box-shadow: 0 0 12px 4px rgba(255, 170, 70, 0.45);
-  animation: candleFlicker 2.2s ease-in-out infinite alternate; animation-delay: inherit;
-}
-.candle.new::after { box-shadow: 0 0 18px 7px rgba(255, 170, 70, 0.65); }
-@keyframes candleFlicker {
-  0% { transform: translateX(-50%) scale(1, 1); opacity: 0.92; }
-  40% { transform: translateX(-52%) scale(0.94, 1.06); opacity: 1; }
-  70% { transform: translateX(-48%) scale(1.04, 0.95); opacity: 0.88; }
-  100% { transform: translateX(-50%) scale(0.97, 1.03); opacity: 0.97; }
-}
-@media (prefers-reduced-motion: reduce) { .candle::after { animation: none; } }
+/* Light a candle: a real candlelight photo with the words resting on its dark lower edge */
+.candle-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+.candle-photo { position: relative; width: 100%; aspect-ratio: 3 / 2; max-height: 340px; background: #1a0f08; }
+.candle-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; display: block; filter: brightness(0.92); transition: filter 1.2s ease; }
+.candle-wrap.is-lit .candle-photo img { filter: brightness(1.15) saturate(1.1); }
+.candle-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 18px 16px; background: linear-gradient(to top, rgba(18, 10, 4, 0.88), rgba(18, 10, 4, 0)); display: flex; flex-direction: column; gap: 6px; }
+.candle-overlay h2 { color: #fff6e8; }
+.candle-overlay p { font-size: 0.95rem; color: #f3e2c8; }
+.candle-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.candle-count { font-family: var(--display); font-size: 1.25rem; }
+@media (prefers-reduced-motion: reduce) { .candle-photo img { transition: none; } }
 .finding { display: flex; flex-direction: column; gap: 8px; }
 .finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
 .finding .src { font-size: 0.8rem; color: var(--muted); }
@@ -415,12 +406,16 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     </div>
     <div class="stack" id="f-slots"></div>
     <div class="stack" id="f-ongoing"></div>
-    <div class="sheet candle-wrap">
-      <h2 id="c-title">Light a candle</h2>
-      <p class="small muted" id="c-sub"></p>
-      <div class="candles" id="candles" aria-hidden="true"></div>
-      <p id="c-count"></p>
-      <div class="row"><button class="hearth" id="c-light">Light a candle</button></div>
+    <div class="candle-wrap" id="candle-wrap">
+      <div class="candle-photo">
+        <img src="images/candles.jpg" alt="A row of small candles glowing warmly in a dark room.">
+        <div class="candle-overlay"><h2 id="c-title">Light a candle</h2><p id="c-sub"></p></div>
+      </div>
+      <div class="candle-body">
+        <p id="c-count" class="candle-count"></p>
+        <div class="row"><button class="hearth" id="c-light">Light a candle</button></div>
+        <p class="credit" style="text-align:left">Photo: <a href="https://unsplash.com/@sinusfiction?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Sies Kranen</a> on <a href="https://unsplash.com/?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></p>
+      </div>
     </div>
 
     <div class="sheet" id="f-notes-wrap">
@@ -763,14 +758,13 @@ function renderFortress() {
       ${n.photo ? `<img class="note-photo" src="${n.photo}" alt="A photo shared by ${esc(n.by)}">` : ""}
       ${n.text ? `<p>${esc(n.text)}</p>` : ""}
       <span class="by">— ${esc(n.by)}</span></div>`).join("");
-  // Candles: one small flame for each candle lit, up to a full row
+  // Candles: the photo glows a little brighter once you've lit yours
   const loss = F.season === "loss";
   $("c-title").textContent = loss ? "Light a candle in memory" : "Light a candle";
   $("c-sub").textContent = loss
     ? "Light a candle in memory of the one they love, and to let the family know you're holding them in your heart."
     : "Light a candle to let the family know you're thinking of them.";
-  $("candles").innerHTML = Array.from({ length: Math.min(candles, 24) }, (_, i) =>
-    `<span class="candle${lit && i === candles - 1 ? " new" : ""}" style="animation-delay:${(i * 0.37) % 2}s"></span>`).join("");
+  $("candle-wrap").classList.toggle("is-lit", lit);
   $("c-count").textContent = candles === 0 ? "Be the first to light a candle."
     : `${candles} ${candles === 1 ? "candle has" : "candles have"} been lit for this family.`;
   $("c-light").disabled = lit;
