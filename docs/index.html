@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body><title>Frankie's Fortress</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap">
+<style>
+/* Layout: a single sheltered column inside warm stone walls; hearth light glows from the fortress doorway at the top and warms each section below. */
+:root {
+  --bg: #E3DED5; --surface: #F3F0EA; --ink: #2B2420; --muted: #675C54; --line: #D0C7BB;
+  --accent: #2F5244; --accent-ink: #F6F2EA; --accent-soft: #DCE5DE;
+  --hearth: #B8661E; --hearth-ink: #8A4710; --hearth-soft: #F3E2CF; --glow: rgba(240, 160, 70, 0.42);
+  --stone1: #CFC6B8; --stone2: #BFB4A4; --stone3: #ADA191; --mortar: #8E8374;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --label: "Inter", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --r: 12px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #191512; --surface: #231D19; --ink: #EDE5DA; --muted: #AB9E91; --line: #3A3029;
+  --accent: #8DBBA5; --accent-ink: #14110F; --accent-soft: #263830;
+  --hearth: #E79C4E; --hearth-ink: #F0B26B; --hearth-soft: #3A2A1B; --glow: rgba(231, 156, 78, 0.26);
+  --stone1: #3B342E; --stone2: #342D28; --stone3: #2C2622; --mortar: #1E1916; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #191512; --surface: #231D19; --ink: #EDE5DA; --muted: #AB9E91; --line: #3A3029;
+  --accent: #8DBBA5; --accent-ink: #14110F; --accent-soft: #263830;
+  --hearth: #E79C4E; --hearth-ink: #F0B26B; --hearth-soft: #3A2A1B; --glow: rgba(231, 156, 78, 0.26);
+  --stone1: #3B342E; --stone2: #342D28; --stone3: #2C2622; --mortar: #1E1916; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: radial-gradient(130% 40% at 50% 0%, var(--glow), transparent 70%) no-repeat, var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+.wrap {
+  max-width: 600px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 110px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: 2.6rem; font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: 1.8rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+.label { font-family: var(--label); font-weight: 700; font-size: 0.76rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--hearth-ink); }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+:focus-visible { outline: 3px solid var(--hearth); outline-offset: 2px; }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+/* Site header: emblem + wordmark on the left, main action and menu on the right */
+.site-head { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+.mark svg { width: 40px; height: 46px; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); }
+.wm { display: flex; flex-direction: column; line-height: 1; }
+.wm-top { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 1.6rem; letter-spacing: -0.01em; }
+.wm-bot { font-family: var(--display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.34em; text-transform: uppercase; color: var(--hearth-ink); margin-top: 3px; padding-left: 2px; }
+.head-actions { display: flex; align-items: center; gap: 8px; }
+.small-btn { padding: 9px 14px; font-size: 0.92rem; white-space: nowrap; }
+.menu-btn { width: 42px; height: 42px; padding: 0; display: grid; place-items: center; background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.menu-btn svg { width: 22px; height: 22px; }
+.menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 230px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: 0 10px 30px rgba(0,0,0,0.18); padding: 6px; display: flex; flex-direction: column; }
+.menu a { padding: 11px 12px; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.menu a:hover, .menu a:focus-visible { background: var(--hearth-soft); }
+@media (max-width: 400px) { .long { display: none; } .wm-top { font-size: 1.4rem; } }
+.hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn.big { padding: 15px 16px; font-size: 1.05rem; }
+@media (max-width: 340px) { .hero-actions { grid-template-columns: 1fr; } }
+.nav { display: flex; gap: 14px; font-size: 0.92rem; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a:hover { color: var(--ink); }
+.back { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.sheet.warm { background: var(--hearth-soft); border-color: transparent; }
+.sheet.green { background: var(--accent-soft); border-color: transparent; }
+
+button, .btn {
+  font: inherit; font-weight: 700; border-radius: 10px; border: 1.5px solid var(--accent);
+  background: var(--accent); color: var(--accent-ink); padding: 12px 18px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center;
+}
+button.ghost, .btn.ghost { background: transparent; color: var(--accent); }
+button.hearth, .btn.hearth { background: var(--hearth); border-color: var(--hearth); color: #FFF8EF; }
+button:disabled { opacity: 0.45; cursor: default; }
+
+label { font-weight: 700; font-size: 0.95rem; }
+input[type=text], input[type=date], input[type=time], textarea, select {
+  font: inherit; width: 100%; padding: 11px 13px; border-radius: 10px; border: 1.5px solid var(--line);
+  background: var(--bg); color: var(--ink);
+}
+textarea { min-height: 80px; resize: vertical; }
+input:focus, textarea:focus { outline: none; border-color: var(--hearth); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; }
+.check input { margin-top: 5px; accent-color: var(--accent); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 0.92rem; font-weight: 400; padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+/* Hero */
+.hero { display: flex; flex-direction: column; gap: 14px; }
+.art { width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--stone3); }
+.art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-photo { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.credit { font-size: 0.78rem; color: var(--muted); text-align: right; }
+.credit a { color: inherit; }
+.tagline { font-family: var(--display); font-style: italic; font-size: 1.3rem; color: var(--muted); }
+
+.steps { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; counter-increment: s; }
+.steps li::before { content: counter(s); font-family: var(--display); font-weight: 700; font-size: 1.3rem; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--hearth-soft); color: var(--hearth-ink); }
+.steps li > div { min-width: 0; }
+ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+
+/* Fortress page */
+.banner { border-radius: 10px; padding: 10px 14px; font-size: 0.92rem; background: var(--hearth-soft); }
+.f-head { display: flex; flex-direction: column; gap: 10px; }
+.message { font-family: var(--display); font-size: 1.35rem; line-height: 1.4; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
+.day { display: flex; flex-direction: column; gap: 8px; }
+.day-title { font-family: var(--label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-size: 0.76rem; }
+.slot { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--hearth); border-radius: 10px; padding: 12px 14px; }
+.slot > div { min-width: 0; }
+.slot.taken { border-left-color: var(--accent); }
+.slot .what { font-weight: 700; }
+.slot .when { font-size: 0.9rem; color: var(--muted); }
+.slot .who { font-size: 0.88rem; color: var(--accent); font-weight: 700; white-space: nowrap; }
+.slot button { padding: 8px 14px; font-size: 0.92rem; }
+.note-card { border-left: 3px solid var(--hearth); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
+.note-card .by { font-size: 0.88rem; color: var(--muted); }
+.copyable { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.copyable:first-of-type { border-top: 0; }
+.copyable span { min-width: 0; }
+.copyable button { padding: 6px 12px; font-size: 0.85rem; font-weight: 400; }
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 40; background: rgba(20, 15, 12, 0.55); display: grid; place-items: end center;
+  padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
+.modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
+
+/* Featured call-out for "What families say helps" */
+.feature {
+  display: flex; flex-direction: column; gap: 12px; padding: 22px 20px; border-radius: var(--r);
+  background: linear-gradient(160deg, var(--hearth-soft), var(--surface) 85%);
+  border: 1.5px solid var(--hearth); border-left-width: 6px;
+  text-decoration: none; color: inherit; box-shadow: 0 6px 18px rgba(120, 60, 15, 0.12);
+}
+.feature h2 { font-size: 1.6rem; }
+.lessons { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.lessons li { padding-left: 26px; position: relative; font-weight: 600; }
+.lessons li::before { content: ""; position: absolute; left: 4px; top: 0.55em; width: 10px; height: 10px; border-radius: 50%; background: var(--hearth); box-shadow: 0 0 0 4px var(--hearth-soft); }
+.finding { display: flex; flex-direction: column; gap: 8px; }
+.finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
+.finding .src { font-size: 0.8rem; color: var(--muted); }
+.finding .src a { color: inherit; }
+.note-soft { background: var(--hearth-soft); border-radius: 10px; padding: 10px 14px; font-size: 0.92rem; }
+.need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.need-grid > * { min-width: 0; }
+.need-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-left: 4px solid var(--hearth); border-radius: 10px; background: var(--bg); }
+.need-row > div { min-width: 0; }
+.need-row button { padding: 6px 12px; font-size: 0.85rem; font-weight: 400; }
+.templates { display: flex; flex-direction: column; gap: 8px; }
+.tpl { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-weight: 400; }
+.tpl input { margin-top: 5px; accent-color: var(--accent); }
+.tpl:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.do-dont > * { min-width: 0; }
+@media (max-width: 520px) { .do-dont { grid-template-columns: 1fr; } }
+.swap { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: 0.95rem; }
+.swap .no { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--hearth); }
+.swap > * { min-width: 0; }
+.res { display: flex; flex-direction: column; gap: 2px; padding-block: 10px; border-top: 1px solid var(--line); }
+.res:first-of-type { border-top: 0; padding-top: 0; }
+.res .num { font-weight: 700; font-size: 1.05rem; user-select: all; }
+.placeholder { border: 1.5px dashed var(--line); border-radius: 10px; padding: 16px; color: var(--muted); font-style: italic; }
+
+.crisis {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface); border-top: 1px solid var(--line); text-align: center; font-size: 0.92rem;
+}
+.crisis strong { color: var(--hearth-ink); }
+.shop-teaser { text-decoration: none; color: inherit; }
+.thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.thumb { aspect-ratio: 1; overflow: hidden; border-radius: 10px; background: var(--surface); display: block; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; }
+/* Zoom in on the chest crest and its "Frankie's Fortress" wording */
+.crest img { object-position: center; }
+.gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gallery .wide { grid-column: 1 / -1; }
+.zoom.crest { aspect-ratio: 180 / 145; width: 100%; max-width: 360px; align-self: center; }
+.gallery figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.gallery figcaption { font-size: 0.88rem; color: var(--muted); text-align: center; }
+.zoom { padding: 0; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); overflow: hidden; cursor: zoom-in; }
+.zoom img { width: 100%; height: auto; display: block; }
+.lightbox { position: fixed; inset: 0; z-index: 45; background: rgba(20, 15, 12, 0.85); display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 85vh; border-radius: var(--r); }
+footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
+
+</style>
+
+<div class="wrap">
+
+  <header class="site-head">
+    <a class="logo" href="#home" aria-label="Frankie's Fortress home">
+      <span class="mark"></span>
+      <span class="wm"><span class="wm-top">Frankie's</span><span class="wm-bot">Fortress</span></span>
+    </a>
+    <div class="head-actions">
+      <a class="btn hearth small-btn" href="#create"><span class="long">Start a </span>Fortress</a>
+      <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <nav class="menu" id="menu" hidden>
+      <a href="#voices"><strong>What families say helps</strong></a>
+      <a href="#fortress">See an example Fortress</a>
+      <a href="#guide">How to help a family</a>
+      <a href="#shop">Wear the message</a>
+      <a href="#resources">Resources</a>
+      <a href="#frankie">In honor of Frankie</a>
+    </nav>
+  </header>
+
+  <!-- HOME -->
+  <section data-view="home" class="stack" style="gap:22px">
+    <div class="hero">
+      <h1>No family should face a crisis alone.</h1>
+      <p class="tagline">A quiet way to surround a family with support.</p>
+      <div class="hero-actions"><a class="btn hearth big" href="#create">Start a Fortress</a><a class="btn ghost big" href="#fortress">See an example</a></div>
+      <figure class="hero-photo">
+        <div class="art" style="aspect-ratio: 4 / 5"><img src="images/castle.jpg" alt="A stone castle at sunrise, wrapped in golden mist, with a cobblestone bridge leading to an arched wooden gate." style="object-position: 50% 42%"></div>
+        <figcaption class="credit">Photo: <a href="https://unsplash.com/@timreb9?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Tim Rebkavets</a> on <a href="https://unsplash.com/?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></figcaption>
+      </figure>
+      <p>When a family is going through a mental health or substance use crisis, or grieving a loss, shame often keeps them from asking for help. Frankie's Fortress lets the people who love them show up with meals, rides and kindness, without anyone needing to explain.</p>
+    </div>
+
+    <a class="feature" href="#voices">
+      <span class="label">Not sure what to say?</span>
+      <h2>Learn what actually helps, from families who've been there.</h2>
+      <ul class="lessons">
+        <li>Reach out first, and keep reaching out</li>
+        <li>Saying something is better than saying nothing</li>
+        <li>Listen more than you advise</li>
+      </ul>
+      <span class="btn hearth" style="align-self:flex-start">Read what helps</span>
+    </a>
+
+    <div class="sheet">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><div><h3>Build a Fortress</h3><p class="muted">The family, or a friend on their behalf, creates a private page and chooses the kinds of help they'd welcome.</p></div></li>
+        <li><div><h3>Share it quietly</h3><p class="muted">Send the private link only to people you trust. It never appears in searches or public lists.</p></div></li>
+        <li><div><h3>Friends show up</h3><p class="muted">Helpers sign up for meals, rides, errands or a simple check-in text. Nobody asks for details.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="sheet warm">
+      <h2>Privacy comes first</h2>
+      <ul class="tight">
+        <li><strong>No explanation needed.</strong> There's no place to describe a diagnosis or what happened, ever.</li>
+        <li><strong>Private link</strong>, with an optional passcode.</li>
+        <li><strong>The address is shared only</strong> with someone who signs up to drop something off.</li>
+        <li><strong>No-contact help</strong>: leave it at the door, no need to answer or reply.</li>
+        <li><strong>Helpers can stay private too</strong>, if the family prefers.</li>
+      </ul>
+    </div>
+
+    <div class="sheet">
+      <h2>For hard seasons, and for grief</h2>
+      <p>A Fortress can support a family during an active crisis, or after they've lost someone they love to suicide, overdose or illness. Grief after these losses is often lonely. Steady, quiet support helps more than people know.</p>
+    </div>
+
+    <a class="sheet warm shop-teaser" href="#shop">
+      <div class="thumbs">
+        <span class="thumb"><img src="images/hoodie-front.jpg" alt="Front of the hoodie: a small colorful crest above the words Frankie's Fortress."></span>
+        <span class="thumb crest"><img src="images/hoodie-crest.jpg" alt="Close-up of the Frankie's Fortress crest on the chest."></span>
+        <span class="thumb"><img src="images/hoodie-back.jpg" alt="Back of the hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></span>
+      </div>
+      <div class="stack" style="gap:6px">
+        <span class="label">Wear the message</span>
+        <h3>Hola, friend. You are not alone.</h3>
+        <p class="small">Hoodies featuring original paintings. Proceeds support suicide prevention.</p>
+      </div>
+    </a>
+
+    <a class="sheet green" href="#frankie" style="text-decoration:none;color:inherit">
+      <span class="label">In honor of Frankie</span>
+      <p>Why this place exists, and the young man it's named for.</p>
+    </a>
+    <footer>Frankie's Fortress is a preview. Nothing you enter is saved.</footer>
+  </section>
+
+  <!-- CREATE -->
+  <section data-view="create" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Start a Fortress</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>Start a Fortress</h2>
+      <p class="muted">This takes about five minutes. You can change anything later.</p>
+    </div>
+
+    <div class="sheet">
+      <span class="label">Who's setting this up?</span>
+      <label class="check"><input type="radio" name="c-role" id="c-role-family" value="family"> <span>I'm part of the family</span></label>
+      <label class="check"><input type="radio" name="c-role" id="c-role-friend" value="friend" checked> <span>I'm a friend, setting it up on the family's behalf</span></label>
+      <p class="small muted">If you're a friend, please make sure the family is comfortable with this before you share it.</p>
+    </div>
+
+    <div class="sheet">
+      <span class="label">What is the family facing?</span>
+      <p class="small muted">Only the general kind of support. Never what happened.</p>
+      <label class="check"><input type="radio" name="c-season" id="c-season-hard" value="hard" checked> <span>A hard season</span></label>
+      <label class="check"><input type="radio" name="c-season" id="c-season-loss" value="loss"> <span>Grieving a loss</span></label>
+    </div>
+
+    <div class="sheet">
+      <div class="field"><label for="c-family">How should the family be named?</label>
+        <input type="text" id="c-family" placeholder="For example: The R. family">
+        <span class="small muted">First names or a last initial are fine, like "Maria & the kids" or "The R. family."</span>
+      </div>
+      <div class="field"><label for="c-organizer">Organizer's name <span class="muted small">(optional)</span></label>
+        <input type="text" id="c-organizer" placeholder="For example: Dana, a family friend">
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="label">A message for helpers</span>
+      <p class="small muted">Choose gentle wording, or write your own. Keep it short. No details are needed.</p>
+      <div class="templates" id="c-templates"></div>
+      <div class="field" id="c-custom-wrap" hidden><label for="c-custom">Your message</label><textarea id="c-custom"></textarea></div>
+    </div>
+
+    <div class="sheet">
+      <span class="label">What kinds of help would be welcome?</span>
+      <div class="chips" id="c-helps"></div>
+    </div>
+
+    <div class="sheet">
+      <span class="label">Schedule specific needs</span>
+      <p class="small muted">Add the things people can sign up for. Be as specific as you like. Private details, like a school name or address, are only shown to the person who signs up.</p>
+      <div class="chips" id="nd-ideas"></div>
+      <div class="field"><label for="nd-what">What's needed</label><input type="text" id="nd-what" placeholder="Pick up younger child from school"></div>
+      <div class="need-grid">
+        <div class="field"><label for="nd-type">Kind of help</label><select id="nd-type"></select></div>
+        <div class="field"><label for="nd-date">Starting</label><input type="date" id="nd-date"></div>
+        <div class="field"><label for="nd-time">Time</label><input type="time" id="nd-time" value="15:00"></div>
+        <div class="field"><label for="nd-repeat">Repeat</label>
+          <select id="nd-repeat">
+            <option value="once">Just once</option>
+            <option value="weekdays2">Every weekday, for 2 weeks</option>
+            <option value="daily7">Every day, for 1 week</option>
+            <option value="weekly4">Once a week, for 4 weeks</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="nd-detail">Details for the helper <span class="muted small">(optional, shown only after they sign up)</span></label><input type="text" id="nd-detail" placeholder="Side door of the school. Please bring a booster seat."></div>
+      <p class="small" id="nd-msg" style="color:var(--hearth-ink)"></p>
+      <div class="row"><button class="ghost" id="nd-add">Add to schedule</button></div>
+      <div class="stack" id="nd-list" style="gap:8px"></div>
+    </div>
+
+    <div class="sheet">
+      <span class="label">Privacy</span>
+      <label class="check"><input type="checkbox" id="c-nocontact" checked> <span>No-contact drop-offs: leave things at the door</span></label>
+      <div class="field"><label for="c-dropoff">Drop-off instructions</label><input type="text" id="c-dropoff" placeholder="For example: Cooler on the front porch. Please don't knock."></div>
+      <label class="check"><input type="checkbox" id="c-passcode" checked> <span>Require a passcode to open the page</span></label>
+      <label class="check"><input type="checkbox" id="c-names"> <span>Let helpers see each other's names</span></label>
+      <p class="small muted">The family's address is only shown to someone after they sign up to drop something off.</p>
+    </div>
+
+    <p class="small" id="c-msg" style="color:var(--hearth-ink)"></p>
+    <div class="row"><button class="hearth" id="c-preview">Preview the Fortress</button></div>
+  </section>
+
+  <!-- FORTRESS PAGE -->
+  <section data-view="fortress" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><nav class="nav"><a href="#guide">How to help</a><a href="#resources">Resources</a></nav></div>
+    <div id="f-banner"></div>
+    <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 54%"></div>
+    <div class="f-head" id="f-head"></div>
+    <div class="feature">
+      <span class="label">Before you help</span>
+      <p>Please don't ask what happened. Just show up, gently and steadily. If you're not sure what to say, you're not alone. Families who've been through this share what helped them.</p>
+      <div class="row"><a class="btn hearth" href="#voices">What families say helps</a><a class="btn ghost" href="#guide">How to help</a></div>
+    </div>
+    <div class="stack" id="f-slots"></div>
+    <div class="stack" id="f-ongoing"></div>
+    <div class="sheet" id="f-notes-wrap">
+      <h2>Kind words</h2>
+      <p class="small muted">The family reads these when they can. Please don't ask questions, and don't expect a reply.</p>
+      <div class="stack" id="f-notes"></div>
+      <div class="field"><label for="n-text">Leave a note</label><textarea id="n-text" placeholder="Thinking of you today. No need to reply."></textarea></div>
+      <div class="chips" id="n-ideas"></div>
+      <div class="field"><label for="n-name">Sign it as <span class="muted small">(leave blank to sign as "A friend")</span></label><input type="text" id="n-name"></div>
+      <div class="row"><button id="n-send">Leave this note</button></div>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section data-view="guide" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home" data-back>‹ Back</a><span class="label">How to help</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>How to support a family without making it harder</h2>
+      <p class="muted">Families facing mental illness, addiction or a loss like suicide or overdose often carry shame that isn't theirs to carry. The kindest help is steady, practical and asks for nothing back.</p>
+    </div>
+    <div class="do-dont">
+      <div class="sheet green">
+        <span class="label" style="color:var(--accent)">Please do</span>
+        <ul class="tight">
+          <li>Offer something specific: "I'm bringing dinner Tuesday."</li>
+          <li>Keep showing up for months, not just the first weeks.</li>
+          <li>Send messages that need no reply.</li>
+          <li>Remember hard dates, like birthdays and anniversaries.</li>
+          <li>After a loss, say their loved one's name, if the family does.</li>
+          <li>Keep what you know private.</li>
+        </ul>
+      </div>
+      <div class="sheet warm">
+        <span class="label">Please don't</span>
+        <ul class="tight">
+          <li>Ask what happened, or for any details.</li>
+          <li>Give advice, opinions or stories about other people.</li>
+          <li>Say "everything happens for a reason" or "at least…"</li>
+          <li>Share their situation with others.</li>
+          <li>Take silence personally. They may not have words yet.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sheet">
+      <h3>Words that lift the shame</h3>
+      <div class="swap">
+        <span class="small muted">Instead of</span><span class="small muted">Try</span>
+        <span class="no">"committed suicide"</span><span>"died by suicide"</span>
+        <span class="no">"addict" or "junkie"</span><span>"a person with a substance use disorder" or "in recovery"</span>
+        <span class="no">"crazy" or "psycho"</span><span>"living with a mental health condition"</span>
+        <span class="no">"Let me know if you need anything."</span><span>"I'm dropping off soup Thursday at 6. I'll leave it on the porch."</span>
+        <span class="no">"How are you doing?"</span><span>"Thinking of you today. No need to reply."</span>
+      </div>
+    </div>
+    <a class="sheet green" href="#voices" style="text-decoration:none;color:inherit">
+      <span class="label" style="color:var(--accent)">Hear from families</span>
+      <p>What helped, and what didn't, in the words of families who've been there. <span style="color:var(--accent);font-weight:700">Read more ›</span></p>
+    </a>
+  </section>
+
+  <!-- VOICES -->
+  <section data-view="voices" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home" data-back>‹ Back</a><span class="label">What helped us</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>What helped us</h2>
+      <p class="muted">Most people want to help a family in crisis but don't know what to say. Here's what families who've been through it, and the researchers who listened to them, say actually helps.</p>
+    </div>
+
+    <div class="stack">
+      <h3>What families tell researchers</h3>
+      <p class="small muted">A summary of published studies of families after a suicide or overdose loss, and of families caring for someone with mental illness or addiction.</p>
+      <div class="stack" id="v-findings"></div>
+    </div>
+
+    <div class="sheet">
+      <h3>In their own words</h3>
+      <div class="placeholder" style="font-style:normal">
+        <p style="margin-bottom:8px"><strong>This space is waiting for the first stories.</strong></p>
+        <p>If your family has been through a mental health or substance use crisis, or the loss of someone you love, your words could help another family feel less alone, and help their friends know what to say.</p>
+      </div>
+      <a class="btn hearth" href="#share-story" id="v-share-link" style="align-self:flex-start">Share what helped you</a>
+    </div>
+
+    <div class="sheet" id="share-story">
+      <h3>Share your experience</h3>
+      <p class="small muted">Answer as many or as few questions as you like. Every story is read by a person before it's shared, and anything that could identify you or your family is removed.</p>
+      <div class="note-soft">Please leave out names, places, and any details about how someone died. If you're struggling right now, you can call or text <strong>988</strong> any time.</div>
+      <div class="need-grid">
+        <div class="field"><label for="v-situation">What your family went through</label>
+          <select id="v-situation">
+            <option value="">Choose one</option>
+            <option>A loved one's mental health crisis</option>
+            <option>A loved one's substance use</option>
+            <option>Losing someone to suicide</option>
+            <option>Losing someone to an overdose</option>
+            <option>Another loss</option>
+            <option>I'd rather not say</option>
+          </select>
+        </div>
+        <div class="field"><label for="v-role">You are their <span class="muted small">(optional)</span></label>
+          <select id="v-role">
+            <option value="">Choose one</option>
+            <option>Parent</option><option>Partner or spouse</option><option>Child</option><option>Sibling</option>
+            <option>Grandparent</option><option>Friend</option><option>I'd rather not say</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="v-helped">What helped you most?</label><textarea id="v-helped" placeholder="A neighbor mowed our lawn every week and never asked a single question."></textarea></div>
+      <div class="field"><label for="v-said">What did someone say or do that meant a lot?</label><textarea id="v-said"></textarea></div>
+      <div class="field"><label for="v-hurt">What hurt, even if it was meant kindly?</label><textarea id="v-hurt"></textarea></div>
+      <div class="field"><label for="v-wish">What do you wish people knew?</label><textarea id="v-wish"></textarea></div>
+      <span class="label">How should we credit you?</span>
+      <label class="check"><input type="radio" name="v-credit" value="anon" checked> <span>Anonymous</span></label>
+      <label class="check"><input type="radio" name="v-credit" value="name"> <span>A first name or initial</span></label>
+      <div class="field" id="v-name-wrap" hidden><label for="v-name">Name or initial</label><input type="text" id="v-name" placeholder="For example: M."></div>
+      <label class="check"><input type="checkbox" id="v-consent"> <span>I agree that my words may be lightly edited for privacy and shared on Frankie's Fortress.</span></label>
+      <p class="small" id="v-msg" style="color:var(--hearth-ink)"></p>
+      <div class="row"><button class="hearth" id="v-submit">Share my story</button></div>
+      <div id="v-done" hidden></div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section data-view="resources" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Resources</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>Help is here, any hour</h2>
+      <p class="muted">Free and confidential. These are United States services.</p>
+    </div>
+    <div class="sheet warm">
+      <span class="label">In crisis right now</span>
+      <div class="res"><strong>988 Suicide &amp; Crisis Lifeline</strong><span class="num">Call or text 988</span><span class="small muted">For anyone in emotional distress, or worried about someone.</span></div>
+      <div class="res"><strong>Crisis Text Line</strong><span class="num">Text HOME to 741741</span></div>
+      <div class="res"><strong>Emergency</strong><span class="num">Call 911</span><span class="small muted">If someone is in immediate danger.</span></div>
+    </div>
+    <div class="sheet">
+      <span class="label">Substance use</span>
+      <div class="res"><strong>SAMHSA National Helpline</strong><span class="num">1-800-662-4357</span><span class="small muted">Treatment referral and information, 24 hours a day.</span></div>
+      <div class="res"><strong>Al-Anon and Nar-Anon</strong><span class="small muted">Support groups for families and friends of someone who drinks or uses drugs.</span></div>
+    </div>
+    <div class="sheet">
+      <span class="label">Mental health</span>
+      <div class="res"><strong>NAMI HelpLine</strong><span class="num">1-800-950-6264</span><span class="small muted">Information and support for people and families affected by mental illness.</span></div>
+    </div>
+    <div class="sheet">
+      <span class="label">After a loss</span>
+      <div class="res"><strong>American Foundation for Suicide Prevention</strong><span class="small muted">Support and programs for people who have lost someone to suicide.</span></div>
+      <div class="res"><strong>GRASP</strong><span class="small muted">Grief Recovery After a Substance Passing: support for families who lost someone to addiction or overdose.</span></div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section data-view="shop" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Wear the message</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>Hola, friend. You are not alone.</h2>
+      <p class="muted">A hoodie that says what so many people need to hear. Every one sold helps fund suicide prevention.</p>
+    </div>
+    <div class="gallery">
+      <figure><button type="button" class="zoom" data-src="images/hoodie-back.jpg" data-alt="Back of the hoodie"><img src="images/hoodie-back.jpg" alt="Back of a gray hoodie with a painting of two figures and the words: Hola, friend. You are not alone."></button><figcaption>Back: the full painting</figcaption></figure>
+      <figure><button type="button" class="zoom" data-src="images/hoodie-front.jpg" data-alt="Front of the hoodie"><img src="images/hoodie-front.jpg" alt="Front of a gray hoodie with a small colorful crest and the words Frankie's Fortress."></button><figcaption>Front: the Frankie's Fortress crest</figcaption></figure>
+      <figure class="wide"><button type="button" class="zoom crest" data-src="images/hoodie-crest.jpg" data-alt="Close-up of the crest"><img src="images/hoodie-crest.jpg" alt="Close-up of the colorful crest on the chest, with the words Frankie's Fortress beneath it."></button><figcaption>Close-up: the crest and "Frankie's Fortress" on the chest</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <h3>About the art</h3>
+      <p class="placeholder">A note about the artist will go here, shared in his own words or with his blessing.</p>
+    </div>
+    <div class="sheet warm">
+      <h3>Where the money goes</h3>
+      <p class="placeholder">The charity or foundation receiving the proceeds will be named here.</p>
+    </div>
+    <div class="sheet">
+      <p>Heather gray hoodie · small crest on the front · full painting on the back. Printed and shipped by Custom Ink.</p>
+      <div class="row"><a class="btn hearth" id="shop-link" target="_blank" rel="noopener">Order on Custom Ink</a></div>
+      <p class="small muted" id="shop-note"></p>
+    </div>
+  </section>
+
+  <!-- FRANKIE -->
+  <section data-view="frankie" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Dedication</span></div>
+    <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 22%"></div>
+    <h2>In honor of Frankie</h2>
+    <p class="placeholder">Frankie's dedication is being written by those who love him, and will appear here with his family's blessing.</p>
+    <p>Frankie's Fortress exists so that no family has to face a mental health or substance use crisis alone, or grieve in silence. It is a place to be surrounded, protected and cared for by the people who love you.</p>
+  </section>
+</div>
+
+<div class="crisis">Need help right now? <strong>Call or text 988</strong> · <a href="#resources">More resources</a></div>
+<div class="lightbox" id="lightbox" hidden><img id="lightbox-img" alt=""></div>
+<div class="modal" id="modal" hidden><div class="sheet" id="modal-body" role="dialog" aria-modal="true"></div></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Emblem: a stone shield with battlements and a firelit arched doorway.
+function brandMark() {
+  const shield = "M3 9H7.5V4H13V9H17.2V4H22.8V9H27V4H32.5V9H37V25C37 35 29.5 41.5 20 45C10.5 41.5 3 35 3 25Z";
+  const joints = [[14, 3, 37], [20, 3, 37], [26, 3, 37], [32, 4, 36], [38, 8, 32]]
+    .map(([y, x0, x1]) => `<path d="M${x0} ${y}H${x1}" />`).join("")
+    + [[10, 9, 14], [27, 9, 14], [16, 14, 20], [31, 14, 20], [11, 20, 26], [24, 20, 26], [29, 20, 26], [17, 26, 32], [33, 26, 32]]
+    .map(([x, y0, y1]) => `<path d="M${x} ${y0}V${y1}" />`).join("");
+  return `<svg viewBox="0 0 40 46" aria-hidden="true">
+    <defs>
+      <linearGradient id="emb-stone" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#c9bda9"/><stop offset="0.6" stop-color="#a39581"/><stop offset="1" stop-color="#7d705f"/></linearGradient>
+      <radialGradient id="emb-fire" cx="50%" cy="88%" r="75%"><stop offset="0" stop-color="#fff0c0"/><stop offset="0.4" stop-color="#f29a3e"/><stop offset="1" stop-color="#7a3010"/></radialGradient>
+      <clipPath id="emb-clip"><path d="${shield}"/></clipPath>
+    </defs>
+    <path d="${shield}" fill="url(#emb-stone)"/>
+    <g clip-path="url(#emb-clip)" stroke="rgba(55,44,34,0.5)" stroke-width="0.8" fill="none">${joints}</g>
+    <path d="M14.5 41V30.5A5.5 5.5 0 0 1 25.5 30.5V41Z" fill="url(#emb-fire)" stroke="#3a2a1c" stroke-width="1"/>
+    <path d="M17 41C17 37.5 19 36.5 20 34C21 36.5 23 37.5 23 41Z" fill="#fff4cc" opacity="0.85"/>
+    <path d="${shield}" fill="none" style="stroke:var(--hearth)" stroke-width="1.6" stroke-linejoin="round"/>
+  </svg>`;
+}
+document.querySelectorAll(".mark").forEach((el) => (el.innerHTML = brandMark()));
+
+/* ---------- content ---------- */
+const HELP = {
+  meals: { label: "Meals", hint: "Home-cooked or takeout, left at the door" },
+  groceries: { label: "Groceries", hint: "Shop from a list or send a gift card" },
+  rides: { label: "Rides", hint: "To appointments, school or work" },
+  childcare: { label: "Childcare", hint: "Watching kids, school pickup" },
+  pets: { label: "Pet care", hint: "Walks, feeding, vet trips" },
+  chores: { label: "Chores & yard", hint: "Laundry, mowing, cleaning" },
+  company: { label: "Sit with us", hint: "Quiet company in the hard hours" },
+  texts: { label: "Check-in texts", hint: "A short note, no reply needed" },
+  giftcards: { label: "Gift cards", hint: "Groceries, gas, food delivery" },
+  prayer: { label: "Prayer", hint: "Hold the family in your prayers" },
+};
+const TEMPLATES = {
+  hard: [
+    "Our family is going through a hard season. We can't share details, but your quiet support means more than we can say.",
+    "We're facing something difficult right now. Small kindnesses, like a meal or a kind note, help us get through each day.",
+    "Thank you for surrounding us with care. We may not be able to respond, but we see every kindness.",
+  ],
+  loss: [
+    "Our family has lost someone we love deeply. We're grateful for your care as we grieve.",
+    "We're heartbroken and taking things one day at a time. Your quiet support helps more than you know.",
+    "Thank you for holding us close. We may not be able to reply, but every kindness reaches us.",
+  ],
+};
+const NOTE_IDEAS = {
+  hard: ["Thinking of you today. No need to reply.", "We love you all. We're not going anywhere.", "I'm here whenever you want company, and fine if you don't."],
+  loss: ["Holding your family close today.", "Thinking of you and the one you love. No need to reply.", "I'll keep showing up. You don't have to say a word."],
+};
+const TEXT_IDEAS = {
+  hard: ["Thinking of you. No need to reply.", "Sending love your way today.", "I'm dropping off dinner tomorrow. No need to answer the door."],
+  loss: ["Thinking of you today. No need to reply.", "Holding you in my heart.", "I'm here, today and in the months ahead."],
+};
+
+/* ---------- example family (made up) ---------- */
+const exampleFortress = (season) => ({
+  example: true, season, family: "The Rivera family", organizer: "Dana, a family friend",
+  message: TEMPLATES[season][season === "loss" ? 1 : 0],
+  helps: ["meals", "rides", "groceries", "pets", "company", "texts", "giftcards", "prayer"],
+  noContact: true, dropoff: "Cooler on the front porch. Please don't knock.", passcode: true, showNames: false,
+  address: "412 Example Lane",
+});
+const EX_HELPERS = ["Jen M.", "Carlos", "The Parkers", "Aunt Rosa"];
+function makeSlots(helps) {
+  const out = [], today = new Date();
+  const plan = [
+    ["meals", "Dinner", "Drop off 5–6 pm", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],
+    ["rides", "Ride to an appointment", "Pick up 9:15 am", [1, 4, 8]],
+    ["groceries", "Grocery run", "List shared after sign-up", [2, 6]],
+    ["pets", "Evening dog walk", "Around 7 pm", [3, 7]],
+    ["company", "Afternoon company", "2–4 pm", [5]],
+    ["childcare", "School pickup", "3:10 pm", [2, 5]],
+    ["chores", "Laundry help", "Anytime", [4]],
+  ];
+  let k = 0;
+  plan.forEach(([type, what, when, days]) => {
+    if (!helps.includes(type)) return;
+    days.forEach((d) => {
+      const date = new Date(today); date.setDate(today.getDate() + d + 1);
+      out.push({ id: "s" + k, type, what, when, date, taken: k % 3 === 0 ? { name: EX_HELPERS[k % EX_HELPERS.length], example: true } : null });
+      k++;
+    });
+  });
+  return out.sort((a, b) => a.date - b.date);
+}
+const exampleNotes = (season) => season === "loss"
+  ? [{ text: "Holding your family close. I'll bring dinner on Sundays this month. No need to answer the door.", by: "Carlos" },
+     { text: "We love you. We're not going anywhere.", by: "The Parkers" }]
+  : [{ text: "Thinking of you all every day. No need to reply.", by: "Jen M." },
+     { text: "We love you. We're not going anywhere.", by: "The Parkers" }];
+
+let F = exampleFortress("hard"), slots = makeSlots(F.helps), notes = exampleNotes("hard"), prayers = 6, prayed = false;
+
+/* ---------- fortress page ---------- */
+const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
+function renderFortress() {
+  $("f-banner").innerHTML = F.example
+    ? `<div class="banner"><strong>Example page.</strong> The family, names and details are made up. Try signing up or leaving a note.
+        <div class="chips" style="margin-top:8px"><button type="button" class="chip" data-season="hard" aria-pressed="${F.season === "hard"}">A hard season</button><button type="button" class="chip" data-season="loss" aria-pressed="${F.season === "loss"}">After a loss</button></div></div>`
+    : `<div class="banner"><strong>This is a preview of your Fortress.</strong> Your draft is saved on this device only, and nobody else can see it yet. <a href="#create">Keep editing</a></div>`;
+  const badges = ["Private link"];
+  if (F.passcode) badges.push("Passcode protected");
+  if (F.noContact) badges.push("No-contact drop-offs");
+  badges.push("Address shared only with helpers");
+  $("f-head").innerHTML = `
+    <span class="label">${F.season === "loss" ? "Surrounding with love" : "A Fortress for"}</span>
+    <h1>${esc(F.family || "This family")}</h1>
+    <p class="message">${esc(F.message || "")}</p>
+    ${F.organizer ? `<p class="small muted">Organized by ${esc(F.organizer)}</p>` : ""}
+    <div class="badges">${badges.map((b) => `<span class="badge">${b}</span>`).join("")}</div>`;
+
+  const dated = slots;
+  const byDay = {};
+  dated.forEach((s) => { const k = s.date.toDateString(); (byDay[k] = byDay[k] || []).push(s); });
+  $("f-slots").innerHTML = dated.length ? `<h2>Sign up to help</h2>` + Object.values(byDay).map((list) => `
+    <div class="day"><span class="day-title">${dayFmt.format(list[0].date)}</span>
+      ${list.map((s) => `<div class="slot${s.taken ? " taken" : ""}">
+        <div><div class="what">${esc(s.what)}</div><div class="when">${esc(s.when)}</div></div>
+        ${s.taken ? `<span class="who">✓ ${F.showNames || s.taken.mine ? esc(s.taken.name) : "A friend"}</span>` : `<button data-slot="${s.id}">Sign up</button>`}
+      </div>`).join("")}
+    </div>`).join("") : "";
+
+  const og = [];
+  if (F.helps.includes("texts")) og.push(`<div class="sheet"><h3>Send a check-in text</h3>
+    <p class="small muted">Text the family directly, or the organizer if you don't have their number. Choose words that need no reply.</p>
+    ${TEXT_IDEAS[F.season].map((t, i) => `<div class="copyable"><span>${esc(t)}</span><button class="ghost" data-copy="${i}">Copy</button></div>`).join("")}</div>`);
+  if (F.helps.includes("giftcards")) og.push(`<div class="sheet"><h3>Gift cards</h3>
+    <p>Grocery stores, gas stations and food delivery help most. ${F.organizer ? `Send them to ${esc(F.organizer.split(",")[0])}, who will pass them along quietly.` : "The organizer will pass them along quietly."}</p></div>`);
+  if (F.helps.includes("prayer")) og.push(`<div class="sheet"><h3>Prayer</h3>
+    <p>${prayers} ${prayers === 1 ? "person is" : "people are"} holding this family in prayer.</p>
+    <div class="row"><button class="${prayed ? "ghost" : ""}" id="pray" ${prayed ? "disabled" : ""}>${prayed ? "You're praying for them" : "I'm praying for them"}</button></div></div>`);
+  $("f-ongoing").innerHTML = og.length ? `<h2>Anytime ways to help</h2>` + og.join("") : "";
+
+  $("f-notes").innerHTML = notes.map((n) => `<div class="note-card"><p>${esc(n.text)}</p><span class="by">— ${esc(n.by)}</span></div>`).join("");
+  $("n-ideas").innerHTML = NOTE_IDEAS[F.season].map((t) => `<button type="button" class="chip" data-idea="${esc(t)}">${esc(t)}</button>`).join("");
+}
+
+$("f-banner").addEventListener("click", (e) => {
+  const s = e.target.dataset.season; if (!s || !F.example) return;
+  exSeason = s; showExample(true);
+});
+$("f-slots").addEventListener("click", (e) => { const id = e.target.dataset.slot; if (id) openSignup(slots.find((s) => s.id === id)); });
+$("f-ongoing").addEventListener("click", (e) => {
+  if (e.target.id === "pray") { prayers++; prayed = true; renderFortress(); return; }
+  const i = e.target.dataset.copy; if (i == null) return;
+  const b = e.target, text = TEXT_IDEAS[F.season][+i];
+  navigator.clipboard.writeText(text).then(() => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); })
+    .catch(() => { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); });
+});
+$("n-ideas").addEventListener("click", (e) => { const t = e.target.dataset.idea; if (t) $("n-text").value = t; });
+$("n-send").onclick = () => {
+  const text = $("n-text").value.trim(); if (!text) { $("n-text").focus(); return; }
+  notes.unshift({ text: text.slice(0, 600), by: $("n-name").value.trim().slice(0, 40) || "A friend" });
+  $("n-text").value = ""; renderFortress();
+};
+
+/* ---------- sign-up ---------- */
+function openSignup(s) {
+  if (!s || s.taken) return;
+  $("modal-body").innerHTML = `
+    <span class="label">${dayFmt.format(s.date)}</span>
+    <h2>${esc(s.what)}</h2>
+    <p class="muted">${esc(s.when)}</p>
+    <div class="field"><label for="m-name">Your name</label><input type="text" id="m-name" placeholder="First name is fine"></div>
+    <div class="field"><label for="m-contact">Phone or email <span class="muted small">(only the organizer sees this)</span></label><input type="text" id="m-contact"></div>
+    <div class="field"><label for="m-note">A note for the family <span class="muted small">(optional)</span></label><input type="text" id="m-note" placeholder="Chicken soup and bread. No need to reply."></div>
+    ${F.noContact ? `<p class="small muted">This family has asked for no-contact drop-offs. Please leave things at the door.</p>` : ""}
+    <p class="small" id="m-msg" style="color:var(--hearth-ink)"></p>
+    <div class="row"><button class="hearth" id="m-ok">Sign me up</button><button class="ghost" id="m-cancel">Cancel</button></div>`;
+  $("modal").hidden = false; $("m-name").focus();
+  $("m-cancel").onclick = closeModal;
+  $("m-ok").onclick = () => {
+    const name = $("m-name").value.trim();
+    if (!name) { $("m-msg").textContent = "Please add your name so the organizer knows who's coming."; $("m-name").focus(); return; }
+    s.taken = { name: name.slice(0, 40), mine: true };
+    renderFortress();
+    $("modal-body").innerHTML = `
+      <span class="label">You're signed up</span>
+      <h2>Thank you, ${esc(name)}.</h2>
+      <p>${esc(s.what)} · ${dayFmt.format(s.date)} · ${esc(s.when)}</p>
+      <div class="sheet warm">
+        <span class="label">Drop-off details, just for you</span>
+        <p><strong>${esc(F.address || "Shared by the organizer")}</strong>${F.example ? ` <span class="small muted">(example)</span>` : ""}</p>
+        ${s.detail ? `<p>${esc(s.detail)}</p>` : ""}
+        ${F.dropoff ? `<p>${esc(F.dropoff)}</p>` : ""}
+      </div>
+      <p class="small muted">Please keep this address private. In the full version, you'll get a reminder the day before.</p>
+      <p class="small">Not sure what to say when you're there? <a href="#voices">See what families say helps</a>.</p>
+      <div class="row"><button id="m-done">Done</button></div>`;
+    $("m-done").onclick = closeModal;
+  };
+}
+function closeModal() { $("modal").hidden = true; }
+$("modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("modal").hidden) closeModal(); });
+
+/* ---------- create ---------- */
+const selectedHelps = new Set(["meals", "rides", "groceries", "texts", "giftcards"]);
+function renderTemplates() {
+  const season = document.querySelector('input[name="c-season"]:checked').value;
+  const current = document.querySelector('input[name="c-tpl"]:checked')?.value || "0";
+  $("c-templates").innerHTML = TEMPLATES[season].map((t, i) =>
+    `<label class="tpl"><input type="radio" name="c-tpl" value="${i}" ${String(i) === current ? "checked" : ""}> <span>${esc(t)}</span></label>`).join("")
+    + `<label class="tpl"><input type="radio" name="c-tpl" value="custom" ${current === "custom" ? "checked" : ""}> <span>Write my own</span></label>`;
+  $("c-custom-wrap").hidden = current !== "custom";
+}
+$("c-templates").addEventListener("change", () => { $("c-custom-wrap").hidden = document.querySelector('input[name="c-tpl"]:checked').value !== "custom"; });
+document.querySelectorAll('input[name="c-season"]').forEach((r) => r.addEventListener("change", renderTemplates));
+$("c-helps").innerHTML = Object.entries(HELP).map(([k, v]) =>
+  `<button type="button" class="chip" data-help="${k}" aria-pressed="${selectedHelps.has(k)}" title="${esc(v.hint)}">${v.label}</button>`).join("");
+$("c-helps").addEventListener("click", (e) => {
+  const k = e.target.dataset.help; if (!k) return;
+  selectedHelps.has(k) ? selectedHelps.delete(k) : selectedHelps.add(k);
+  e.target.setAttribute("aria-pressed", selectedHelps.has(k));
+});
+// The example family and your own preview are kept apart, so neither can replace the other.
+let exSeason = "hard", exampleState = null, previewState = null;
+function useState(st) { ({ F, slots, notes, prayers, prayed } = st); renderFortress(); }
+function saveCurrent() { const st = { F, slots, notes, prayers, prayed }; F.example ? (exampleState = st) : (previewState = st); }
+function showExample(reset) {
+  if (!F.example) saveCurrent();
+  if (reset || !exampleState) { const ex = exampleFortress(exSeason); exampleState = { F: ex, slots: makeSlots(ex.helps), notes: exampleNotes(exSeason), prayers: 6, prayed: false }; }
+  useState(exampleState);
+}
+function buildPreview() {
+  const season = document.querySelector('input[name="c-season"]:checked').value;
+  const tpl = document.querySelector('input[name="c-tpl"]:checked')?.value || "0";
+  const pf = {
+    example: false, season,
+    family: $("c-family").value.trim().slice(0, 60), organizer: $("c-organizer").value.trim().slice(0, 60),
+    message: tpl === "custom" ? $("c-custom").value.trim().slice(0, 400) : TEMPLATES[season][+tpl],
+    helps: [...selectedHelps], noContact: $("c-nocontact").checked, dropoff: $("c-dropoff").value.trim().slice(0, 200),
+    passcode: $("c-passcode").checked, showNames: $("c-names").checked, address: "",
+  };
+  previewState = { F: pf, slots: expandNeeds(), notes: [], prayers: 0, prayed: false };
+}
+function showPreview() {
+  if (F.example) saveCurrent();
+  if (!previewState) buildPreview();
+  useState(previewState);
+}
+$("c-preview").onclick = () => {
+  if (!$("c-family").value.trim()) {
+    $("c-msg").textContent = "Please add a name for the family first. First names or an initial are fine.";
+    $("c-family").focus();
+    return;
+  }
+  $("c-msg").textContent = "";
+  saveDraft();
+  buildPreview();
+  if (location.hash === "#preview") route(); else location.hash = "preview";
+};
+
+/* ---------- shop ---------- */
+// Paste the Custom Ink campaign link here once it exists.
+const SHOP_URL = "";
+if (SHOP_URL) $("shop-link").href = SHOP_URL;
+else {
+  $("shop-link").removeAttribute("href");
+  $("shop-link").setAttribute("aria-disabled", "true");
+  $("shop-link").style.opacity = "0.5";
+  $("shop-note").textContent = "Ordering opens soon. The Custom Ink link will be added here.";
+}
+document.querySelectorAll(".zoom").forEach((b) => (b.onclick = () => {
+  $("lightbox-img").src = b.dataset.src; $("lightbox-img").alt = b.dataset.alt; $("lightbox").hidden = false;
+}));
+$("lightbox").onclick = () => ($("lightbox").hidden = true);
+
+/* ---------- scheduled needs (Start a Fortress) ---------- */
+const NEED_TYPES = ["meals", "groceries", "rides", "childcare", "pets", "chores", "company"];
+const NEED_IDEAS = [
+  ["Dinner drop-off", "meals", "17:30"], ["School pickup", "childcare", "15:00"], ["Ride to an appointment", "rides", "09:00"],
+  ["Grocery run", "groceries", "10:00"], ["Evening dog walk", "pets", "19:00"], ["Sit with us for a while", "company", "14:00"],
+];
+const REPEAT_LABEL = { once: "", weekdays2: "Every weekday, 2 weeks", daily7: "Every day, 1 week", weekly4: "Weekly, 4 weeks" };
+const needs = [];
+const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const parseYmd = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const timeFmt = (hhmm) => {
+  if (!hhmm) return "Anytime";
+  const [h, m] = hhmm.split(":").map(Number);
+  return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(new Date(2000, 0, 1, h, m));
+};
+function occurrences(n) {
+  const start = parseYmd(n.date), out = [];
+  const add = (k) => { const d = new Date(start); d.setDate(start.getDate() + k); return d; };
+  if (n.repeat === "weekdays2") { for (let k = 0; k < 14; k++) { const d = add(k); if (d.getDay() % 6 !== 0) out.push(d); } }
+  else if (n.repeat === "daily7") { for (let k = 0; k < 7; k++) out.push(add(k)); }
+  else if (n.repeat === "weekly4") { for (let k = 0; k < 4; k++) out.push(add(k * 7)); }
+  else out.push(start);
+  return out;
+}
+function expandNeeds() {
+  let k = 0;
+  return needs.flatMap((n) => occurrences(n).map((date) => ({ id: "n" + k++, type: n.type, what: n.what, when: timeFmt(n.time), date, detail: n.detail, taken: null })))
+    .sort((a, b) => a.date - b.date);
+}
+function renderNeeds() {
+  $("nd-list").innerHTML = needs.length
+    ? needs.map((n, i) => `<div class="need-row"><div><strong>${esc(n.what)}</strong>
+        <div class="small muted">${esc(HELP[n.type].label)} · ${dayFmt.format(parseYmd(n.date))} · ${esc(timeFmt(n.time))}${REPEAT_LABEL[n.repeat] ? ` · ${REPEAT_LABEL[n.repeat]}` : ""}</div>
+        ${n.detail ? `<div class="small muted">Private details added</div>` : ""}</div>
+        <button class="ghost" data-remove="${i}" aria-label="Remove ${esc(n.what)}">Remove</button></div>`).join("")
+    : `<p class="small muted">Nothing scheduled yet. Until you add something, your Fortress will show only the anytime ways to help.</p>`;
+}
+$("nd-type").innerHTML = NEED_TYPES.map((t) => `<option value="${t}">${HELP[t].label}</option>`).join("");
+$("nd-type").value = "childcare";
+{ const t = new Date(); t.setDate(t.getDate() + 1); $("nd-date").value = ymd(t); }
+$("nd-ideas").innerHTML = NEED_IDEAS.map(([what], i) => `<button type="button" class="chip" data-idea="${i}">${esc(what)}</button>`).join("");
+$("nd-ideas").addEventListener("click", (e) => {
+  const i = e.target.dataset.idea; if (i == null) return;
+  const [what, type, time] = NEED_IDEAS[+i];
+  $("nd-what").value = what; $("nd-type").value = type; $("nd-time").value = time; $("nd-what").focus();
+});
+$("nd-add").onclick = () => {
+  const what = $("nd-what").value.trim();
+  if (!what) { $("nd-msg").textContent = "Describe what's needed first, like “Pick up younger child from school.”"; $("nd-what").focus(); return; }
+  if (!$("nd-date").value) { $("nd-msg").textContent = "Choose a starting date."; $("nd-date").focus(); return; }
+  needs.push({ what: what.slice(0, 80), type: $("nd-type").value, date: $("nd-date").value, time: $("nd-time").value, repeat: $("nd-repeat").value, detail: $("nd-detail").value.trim().slice(0, 200) });
+  if (!selectedHelps.has($("nd-type").value)) {
+    selectedHelps.add($("nd-type").value);
+    document.querySelector(`[data-help="${$("nd-type").value}"]`)?.setAttribute("aria-pressed", "true");
+  }
+  $("nd-msg").textContent = "";
+  $("nd-what").value = ""; $("nd-detail").value = ""; $("nd-repeat").value = "once";
+  renderNeeds();
+};
+$("nd-list").addEventListener("click", (e) => { const i = e.target.dataset.remove; if (i != null) { needs.splice(+i, 1); renderNeeds(); } });
+renderNeeds();
+
+/* ---------- draft: remember what was entered in Start a Fortress (this device only) ---------- */
+function saveDraft() {
+  const d = {
+    role: document.querySelector('input[name="c-role"]:checked')?.value,
+    season: document.querySelector('input[name="c-season"]:checked')?.value,
+    tpl: document.querySelector('input[name="c-tpl"]:checked')?.value,
+    family: $("c-family").value, organizer: $("c-organizer").value, custom: $("c-custom").value,
+    helps: [...selectedHelps], nocontact: $("c-nocontact").checked, dropoff: $("c-dropoff").value,
+    passcode: $("c-passcode").checked, names: $("c-names").checked, needs,
+  };
+  try { localStorage.setItem("ff.draft", JSON.stringify(d)); } catch (e) {}
+}
+let draftTimer = null;
+const saveDraftSoon = () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 300); };
+["input", "change", "click"].forEach((ev) => document.querySelector('[data-view="create"]').addEventListener(ev, saveDraftSoon));
+(function loadDraft() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem("ff.draft") || "null"); } catch (e) {}
+  if (!d) return;
+  const check = (name, v) => { const el = v && document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
+  check("c-role", d.role); check("c-season", d.season);
+  // Older drafts may still hold the sample text that used to be pre-filled; leave those boxes empty.
+  const oldSamples = ["The Rivera family", "Dana, a family friend", "Cooler on the front porch. Please don't knock."];
+  ["family", "organizer", "custom", "dropoff"].forEach((k) => { if (typeof d[k] === "string" && !oldSamples.includes(d[k])) $("c-" + k).value = d[k]; });
+  $("c-nocontact").checked = !!d.nocontact; $("c-passcode").checked = !!d.passcode; $("c-names").checked = !!d.names;
+  if (Array.isArray(d.helps)) {
+    selectedHelps.clear(); d.helps.forEach((h) => HELP[h] && selectedHelps.add(h));
+    document.querySelectorAll("[data-help]").forEach((b) => b.setAttribute("aria-pressed", selectedHelps.has(b.dataset.help)));
+  }
+  if (Array.isArray(d.needs)) { needs.length = 0; d.needs.filter((n) => n && n.what && n.date && HELP[n.type]).forEach((n) => needs.push(n)); renderNeeds(); }
+  renderTemplates(); check("c-tpl", d.tpl); $("c-custom-wrap").hidden = d.tpl !== "custom";
+})();
+
+// "Back" links return to wherever the visitor came from.
+document.querySelectorAll("[data-back]").forEach((a) => a.addEventListener("click", (e) => { if (history.length > 1) { e.preventDefault(); history.back(); } }));
+
+/* ---------- what helped us: research findings and the sharing form ---------- */
+// Summaries are written in our own words; each links to its source.
+const FINDINGS = [
+  { title: "Reach out first, and keep reaching out",
+    text: "People bereaved by suicide said the support they valued most was offered to them, not support they had to ask for. Many weren't ready at first, so offers that were repeated over the following months mattered.",
+    try: "Don't wait to be asked. Offer something specific now, and offer again in a few weeks.",
+    src: [["Pitman et al., 2018, International Journal of Environmental Research and Public Health", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"]] },
+  { title: "Saying something is better than saying nothing",
+    text: "In a study of 3,432 young adults, people bereaved by suicide were less likely than others to get support right away. Researchers linked this to stigma and the awkwardness people feel. Silence and avoidance can feel like judgment.",
+    try: "An imperfect “I'm so sorry. I'm here” is far better than staying away because you don't know the right words.",
+    src: [["Pitman et al., 2017, BMJ Open", "https://discovery.ucl.ac.uk/id/eprint/1558270/"]] },
+  { title: "Listen more than you advise",
+    text: "In a well-known study of bereaved families, the responses people found least helpful were advice and being encouraged to “move on.” Among the most helpful were chances to talk openly about their feelings.",
+    try: "Ask “Do you want to talk about it?” and then mostly listen. Skip the advice unless they ask.",
+    src: [["Lehman, Ellard & Wortman, 1986, summarized in Pitman et al., 2018", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"]] },
+  { title: "After a drug or alcohol death, judgment deepens the grief",
+    text: "Researchers who studied families bereaved through drugs or alcohol found many met unkind or stigmatizing responses, which made their grief heavier and more isolating.",
+    try: "Talk about the person as a whole person: what they loved, who they were. Never blame them or the family.",
+    src: [["University of Stirling and University of Bath research, 2015", "https://stir.ac.uk/news/2015/06/drugs-alcohol-bereavement-guidelines"], ["Guidelines: Bereaved by substance use", "https://www.bath.ac.uk/announcements/new-guidelines-to-support-people-bereaved-by-alcohol-or-drugs/"]] },
+  { title: "People who've been there help in a special way",
+    text: "Bereaved people often named contact with others who had lived through something similar as one of the most helpful kinds of support. Peer support groups are valued for the same reason.",
+    try: "Gently share a support group or a friend who's been through it. Offer to drive them to the first meeting.",
+    src: [["Pitman et al., 2018", "https://pmc.ncbi.nlm.nih.gov/articles/PMC5923708/"], ["University of Bath family case study", "https://www.bath.ac.uk/case-studies/how-one-familys-loss-is-helping-others/"]] },
+  { title: "Families in crisis often go it alone",
+    text: "People caring for a loved one with mental health or addiction problems report more stress, loneliness and isolation than other caregivers. Stigma often keeps them from reaching out, and family support groups have been found to ease that loneliness.",
+    try: "Assume they need you even if they don't say so. Quiet, practical help lets them accept support without explaining anything.",
+    src: [["Carleton University, Canadian caregiver study", "https://carleton.ca/determinants/2017/the-emotional-health-and-well%e2%80%90being-of-canadians-who-care-for-persons-with-mental-health-or-addictions-problems"], ["Study of family caregivers for substance use disorder, Pakistan","https://www.jamc.ayubmed.edu.pk/index.php/jamc/article/view/14248"]] },
+];
+$("v-findings").innerHTML = FINDINGS.map((f) => `<div class="sheet finding">
+    <h3>${esc(f.title)}</h3>
+    <p>${esc(f.text)}</p>
+    <p class="try"><strong>What you can do:</strong> ${esc(f.try)}</p>
+    <p class="src">Source: ${f.src.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ")}</p>
+  </div>`).join("");
+
+$("v-share-link").onclick = (e) => { e.preventDefault(); $("share-story").scrollIntoView({ behavior: "smooth", block: "start" }); };
+document.querySelectorAll('input[name="v-credit"]').forEach((r) => r.addEventListener("change", () => {
+  $("v-name-wrap").hidden = document.querySelector('input[name="v-credit"]:checked').value !== "name";
+}));
+// Words that suggest the writer may be in danger right now. If found, we point them to help first.
+const STRUGGLE_RE = /\b(kill myself|end my life|want to die|wanna die|don'?t want to (be here|live)|no reason to live|suicidal|hurt myself|better off without me)\b/i;
+$("v-submit").onclick = () => {
+  const answers = ["v-helped", "v-said", "v-hurt", "v-wish"].map((id) => $(id).value.trim());
+  if (!answers.some(Boolean)) { $("v-msg").textContent = "Please answer at least one question."; $("v-helped").focus(); return; }
+  if (!$("v-consent").checked) { $("v-msg").textContent = "Please tick the box to agree that your words may be shared."; $("v-consent").focus(); return; }
+  $("v-msg").textContent = "";
+  const struggling = STRUGGLE_RE.test(answers.join(" "));
+  $("v-done").hidden = false;
+  $("v-done").innerHTML = `
+    ${struggling ? `<div class="sheet warm"><h3>We're glad you're here.</h3><p>Some of what you wrote sounds like you might be hurting right now. You don't have to carry it alone. Please call or text <strong>988</strong>, any time, day or night, to talk with someone who cares.</p></div>` : ""}
+    <div class="sheet green">
+      <h3>Thank you for sharing.</h3>
+      <p>Your words could help another family feel less alone. In the full site, a person would read your story and remove anything identifying before it's shared.</p>
+      <p class="small muted">This is a preview, so nothing was sent or saved.</p>
+    </div>`;
+  $("v-done").scrollIntoView({ behavior: "smooth", block: "nearest" });
+};
+
+/* ---------- header menu ---------- */
+function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
+$("menu-btn").onclick = (e) => { e.stopPropagation(); setMenu($("menu").hidden); };
+document.addEventListener("click", (e) => { if (!$("menu").hidden && !e.target.closest("#menu")) setMenu(false); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+
+/* ---------- navigation ---------- */
+const views = [...document.querySelectorAll("[data-view]")];
+function route() {
+  const name = location.hash.slice(1);
+  // "#fortress" is the example family; "#preview" is your own Fortress. Both use the same page layout.
+  if (name === "fortress") showExample(false);
+  if (name === "preview") showPreview();
+  const view = name === "preview" ? "fortress" : name;
+  const target = views.some((v) => v.dataset.view === view) ? view : "home";
+  views.forEach((v) => (v.hidden = v.dataset.view !== target));
+  closeModal(); setMenu(false);
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+renderTemplates(); renderFortress(); route();
+</script>
+
+</body>
+</html>
