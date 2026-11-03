@@ -230,6 +230,7 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .zoom img { width: 100%; height: auto; display: block; }
 .lightbox { position: fixed; inset: 0; z-index: 45; background: rgba(20, 15, 12, 0.85); display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 85vh; border-radius: var(--r); }
+.site-foot { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; }
 footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
 </style>
@@ -625,6 +626,11 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <p class="placeholder">Frankie's dedication is being written by those who love him, and will appear here with his family's blessing.</p>
     <p>Frankie's Fortress exists so that no family has to face a mental health or substance use crisis alone, or grieve in silence. It is a place to be surrounded, protected and cared for by the people who love you.</p>
   </section>
+
+  <footer class="site-foot">
+    <p>© <span id="year">2026</span> Frankie's Fortress. All rights reserved.</p>
+    <p>Hoodie artwork © the artist. Photos by Tim Rebkavets and Sies Kranen on Unsplash.</p>
+  </footer>
 </div>
 
 <div class="crisis">Need help right now? <strong>Call or text 988</strong> · <a href="#resources">More resources</a></div>
@@ -1112,6 +1118,9 @@ function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("a
 $("menu-btn").onclick = (e) => { e.stopPropagation(); setMenu($("menu").hidden); };
 document.addEventListener("click", (e) => { if (!$("menu").hidden && !e.target.closest("#menu")) setMenu(false); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+
+// Keep the copyright year current.
+$("year").textContent = new Date().getFullYear();
 
 /* ---------- navigation ---------- */
 const views = [...document.querySelectorAll("[data-view]")];
