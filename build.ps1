@@ -30,4 +30,6 @@ $html = $skeleton + $page + "`n</body>`n</html>`n"
 Copy-Item (Join-Path $root "images\*") (Join-Path $out "images") -Force
 # Tell GitHub Pages to serve the files as-is.
 [System.IO.File]::WriteAllText((Join-Path $out ".nojekyll"), "")
+# The site's own web address (set up on Namecheap).
+[System.IO.File]::WriteAllText((Join-Path $out "CNAME"), "frankiesfortress.org`n")
 "Built docs/index.html"
