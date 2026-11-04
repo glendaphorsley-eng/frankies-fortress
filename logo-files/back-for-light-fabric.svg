@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="1500" height="2000">
+  <defs><clipPath id="arch"><path d="M40 345V170A110 110 0 0 1 260 170V345Z"/></clipPath></defs>
+  <text x="150" y="38" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="14" font-weight="600" letter-spacing="5" fill="#2B2420">NO ONE STANDS ALONE</text>
+  <g clip-path="url(#arch)">
+    <path d="M83.0 246.8L53.5 252.0 M82.0 235.0L66.0 235.0 M83.0 223.2L53.5 218.0 M86.1 211.7L71.1 206.3 M91.1 201.0L65.1 186.0 M97.9 191.3L85.7 181.0 M106.3 182.9L87.0 159.9 M116.0 176.1L108.0 162.3 M126.7 171.1L116.5 142.9 M138.2 168.0L135.4 152.3 M150.0 167.0L150.0 137.0 M161.8 168.0L164.6 152.3 M173.3 171.1L183.5 142.9 M184.0 176.1L192.0 162.3 M193.7 182.9L213.0 159.9 M202.1 191.3L214.3 181.0 M208.9 201.0L234.9 186.0 M213.9 211.7L228.9 206.3 M217.0 223.2L246.5 218.0 M218.0 235.0L234.0 235.0 M217.0 246.8L246.5 252.0" fill="none" stroke="#B8661E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="150" cy="235" r="58" fill="#B8661E"/>
+    <g transform="translate(66.8 146.4) scale(2.6)">
+      <path d="M8 56V40H12V28L16 18L20 28V36H24V20L32 6L40 20V34H44V26L48 15L52 26V40H56V56Z" fill="#2B2420"/>
+      <path d="M28 56V48A4 4 0 0 1 36 48V56Z" fill="#B8661E"/>
+      <rect x="30.5" y="24" width="3" height="5" rx="1.5" fill="#B8661E"/><rect x="15" y="31" width="2" height="3" rx="1" fill="#B8661E"/><rect x="47" y="30" width="2" height="3" rx="1" fill="#B8661E"/>
+    </g>
+    <path d="M30 304Q150 290 270 304" fill="none" stroke="#2B2420" stroke-width="6" stroke-linecap="round"/>
+    <path d="M58 333A22 22 0 0 1 102 333 M128 330A22 22 0 0 1 172 330 M198 333A22 22 0 0 1 242 333 M58 333V308 M102 333V300 M128 330V299 M172 330V299 M198 333V300 M242 333V308" fill="none" stroke="#2B2420" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <path d="M40 345V170A110 110 0 0 1 260 170V345" fill="none" stroke="#B8661E" stroke-width="3.5"/>
+  <path d="M30 345H270" fill="none" stroke="#B8661E" stroke-width="3.5" stroke-linecap="round"/>
+  <text x="150" y="382" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="24" font-weight="600" letter-spacing="2.5" fill="#2B2420">FRANKIE'S FORTRESS</text>
+</svg>
