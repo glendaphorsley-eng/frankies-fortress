@@ -267,6 +267,30 @@ ul.tight:not([class*="b-"]) li::before, ul.tight.b-gate-glow li::before, .lesson
 .site-foot { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; }
 footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 
+/* Fortress page layout. On phones the parts flow in one column in this order;
+   on wide screens the sign-up calendar and notes sit on the left, with a sidebar of anytime help on the right. */
+.f-layout, .f-main, .f-side { display: contents; }
+#f-head { order: 1; } .f-side > .feature { order: 2; } #f-slots { order: 3; } #f-ongoing { order: 4; } #candle-wrap { order: 5; } #f-notes-wrap { order: 6; }
+
+/* Wide screens (computers, landscape tablets): use more of the width */
+@media (min-width: 960px) {
+  .wrap { max-width: 1160px; padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); }
+  /* Reading pages stay a comfortable width, centered */
+  section[data-view]:not([data-view="home"]):not([data-view="fortress"]) { width: 100%; max-width: 780px; margin-inline: auto; }
+  /* Home: headline beside the photo, then sections in pairs */
+  section[data-view="home"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px !important; align-items: stretch; }
+  section[data-view="home"] > .hero, section[data-view="home"] > footer { grid-column: 1 / -1; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-rows: repeat(5, auto) 1fr; column-gap: 56px; row-gap: 18px; align-items: start; padding-top: 16px; }
+  .hero > * { grid-column: 1; }
+  .hero > .hero-photo { grid-column: 2; grid-row: 1 / -1; }
+  .hero h1 { font-size: 3.4rem; }
+  .hero .tagline { font-size: 1.5rem; }
+  /* Fortress page: main column and sidebar */
+  .f-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "main side" "notes side"; column-gap: 28px; row-gap: 22px; align-items: start; }
+  .f-main { grid-area: main; display: flex; flex-direction: column; gap: 22px; }
+  .f-side { grid-area: side; display: flex; flex-direction: column; gap: 22px; }
+  #f-notes-wrap { grid-area: notes; }
+}
 </style>
 
 <div class="wrap">
@@ -452,13 +476,17 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div class="topbar"><a class="back" href="#home">‹ Home</a><nav class="nav"><a href="#guide">How to help</a><a href="#resources">Resources</a></nav></div>
     <div id="f-banner"></div>
     <div class="art" style="aspect-ratio: 3 / 1"><img src="images/castle.jpg" alt="" style="object-position: 50% 54%"></div>
+    <div class="f-layout">
+    <div class="f-main">
     <div class="f-head" id="f-head"></div>
+    <div class="stack" id="f-slots"></div>
+    </div>
+    <aside class="f-side">
     <div class="feature">
       <span class="label">Before you help</span>
       <p>Please don't ask what happened. Just show up, gently and steadily. If you're not sure what to say, you're not alone. Families who've been through this share what helped them.</p>
       <div class="row"><a class="btn hearth" href="#voices">What families say helps</a><a class="btn ghost" href="#guide">How to help</a></div>
     </div>
-    <div class="stack" id="f-slots"></div>
     <div class="stack" id="f-ongoing"></div>
     <div class="candle-wrap" id="candle-wrap">
       <div class="candle-photo">
@@ -471,6 +499,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
         <p class="credit" style="text-align:left">Photo: <a href="https://unsplash.com/@sinusfiction?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Sies Kranen</a> on <a href="https://unsplash.com/?utm_source=frankies_fortress&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></p>
       </div>
     </div>
+    </aside>
 
     <div class="sheet" id="f-notes-wrap">
       <h2>Kind words and photos</h2>
@@ -487,6 +516,7 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <div class="chips" id="n-ideas"></div>
       <div class="field"><label for="n-name">Sign it as <span class="muted small">(leave blank to sign as "A friend")</span></label><input type="text" id="n-name"></div>
       <div class="row"><button id="n-send">Leave this note</button></div>
+    </div>
     </div>
   </section>
 
