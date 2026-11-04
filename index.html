@@ -143,6 +143,19 @@ ul.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
 .modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
 
+/* Logo ideas page */
+.logo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.logo-row > * { min-width: 0; }
+.logo-tile { border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px 10px; }
+.logo-tile .big { width: 128px; height: 128px; }
+.logo-tile .big svg, .logo-head .sm svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.logo-head { display: flex; align-items: center; gap: 10px; }
+.logo-head .sm { width: 44px; height: 44px; flex: none; }
+.dark-sample {
+  --bg: #191512; --surface: #231D19; --ink: #EDE5DA; --muted: #AB9E91; --line: #3A3029;
+  --hearth: #E79C4E; --hearth-ink: #F0B26B; --glow: rgba(231, 156, 78, 0.26);
+  --stone1: #3B342E; --stone2: #342D28; --stone3: #2C2622; --mortar: #1E1916;
+}
 /* Featured call-out for "What families say helps" */
 .feature {
   display: flex; flex-direction: column; gap: 12px; padding: 22px 20px; border-radius: var(--r);
@@ -620,6 +633,16 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       <div class="row"><a class="btn hearth" id="shop-link" target="_blank" rel="noopener">Order on Custom Ink</a></div>
       <p class="small muted" id="shop-note"></p>
     </div>
+  </section>
+
+  <!-- LOGO IDEAS (private review page, not linked from the menu) -->
+  <section data-view="logos" class="stack" hidden>
+    <div class="topbar"><a class="back" href="#home">‹ Home</a><span class="label">Logo ideas</span></div>
+    <div class="stack" style="gap:6px">
+      <h2>Logo ideas</h2>
+      <p class="muted">Four directions inspired by the castle photo: its pointed turrets, misty sunrise and arched gate. Each is shown large, as it would look in the header, and on a dark background.</p>
+    </div>
+    <div class="stack" id="logo-options"></div>
   </section>
 
   <!-- FRANKIE -->
@@ -1116,6 +1139,84 @@ $("v-submit").onclick = () => {
     </div>`;
   $("v-done").scrollIntoView({ behavior: "smooth", block: "nearest" });
 };
+
+/* ---------- logo ideas, drawn from the castle photo ---------- */
+let logoN = 0;
+// Turreted silhouette shared by several ideas: a tall central tower with a conical roof, flanked by two turrets.
+const CASTLE = "M8 56V40H12V28L16 18L20 28V36H24V20L32 6L40 20V34H44V26L48 15L52 26V40H56V56Z";
+const GATE = "M28 56V48A4 4 0 0 1 36 48V56Z";
+function logoDawn() {
+  const id = "lg" + logoN++;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <defs><radialGradient id="${id}s"><stop offset="0" style="stop-color:var(--hearth);stop-opacity:0.9"/><stop offset="1" style="stop-color:var(--hearth);stop-opacity:0"/></radialGradient>
+    <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2a0"/><stop offset="1" stop-color="#e98a32"/></linearGradient></defs>
+    <circle cx="44" cy="20" r="17" fill="url(#${id}s)"/>
+    <path d="${CASTLE}" style="fill:var(--ink)"/>
+    <path d="${GATE}" fill="url(#${id}g)"/>
+    <g fill="url(#${id}g)"><rect x="30.5" y="24" width="3" height="5" rx="1.5"/><rect x="15" y="31" width="2" height="3" rx="1"/><rect x="47" y="30" width="2" height="3" rx="1"/></g>
+    <path d="M2 59Q32 53 62 59" fill="none" style="stroke:var(--ink)" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
+}
+function logoGate() {
+  const id = "lg" + logoN++;
+  const courses = [32, 38, 44, 50].map((y, i) => `M12 ${y}H52` + [0, 1, 2, 3].map((k) => ` M${(i % 2 ? 17 : 22) + k * 10} ${y - 6}V${y}`).join("")).join(" ");
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <defs><radialGradient id="${id}g" cx="50%" cy="80%" r="70%"><stop offset="0" stop-color="#fff0c4"/><stop offset="0.5" stop-color="#f2a548"/><stop offset="1" stop-color="#9a4a14"/></radialGradient></defs>
+    <rect x="12" y="26" width="40" height="30" style="fill:var(--stone2)"/>
+    <path d="${courses}" fill="none" style="stroke:var(--mortar)" stroke-width="0.8" opacity="0.8"/>
+    <path d="M7 27L18 12H46L57 27Z" style="fill:var(--ink)"/>
+    <path d="M22 56V43A10 10 0 0 1 42 43V56Z" fill="url(#${id}g)"/>
+    <path d="M22 56V43A10 10 0 0 1 31 33.1V56Z M42 56V43A10 10 0 0 0 33 33.1V56Z" fill="#6b4423"/>
+    <path d="M25.5 37V56M28.5 34.5V56M35.5 34.5V56M38.5 37V56" stroke="#3e2512" stroke-width="0.8"/>
+    <path d="M22 56V43A10 10 0 0 1 42 43V56" fill="none" style="stroke:var(--stone3)" stroke-width="3"/>
+    <path d="M2 59Q32 55 62 59" fill="none" style="stroke:var(--ink)" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
+}
+function logoSeal() {
+  const id = "lg" + logoN++;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <defs><path id="${id}a" d="M9 32A23 23 0 0 1 55 32"/><path id="${id}b" d="M12 34A20 20 0 0 0 52 34"/>
+    <radialGradient id="${id}s"><stop offset="0" style="stop-color:var(--hearth);stop-opacity:0.8"/><stop offset="1" style="stop-color:var(--hearth);stop-opacity:0"/></radialGradient></defs>
+    <circle cx="32" cy="32" r="30.5" fill="none" style="stroke:var(--hearth)" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="18" fill="none" style="stroke:var(--hearth)" stroke-width="0.8" opacity="0.7"/>
+    <text font-family="Newsreader, Georgia, serif" font-size="4.6" font-weight="600" letter-spacing="0.7" style="fill:var(--ink)"><textPath href="#${id}a" startOffset="50%" text-anchor="middle">FRANKIE'S FORTRESS</textPath></text>
+    <text font-family="Newsreader, Georgia, serif" font-size="4" font-style="italic" style="fill:var(--hearth-ink)"><textPath href="#${id}b" startOffset="50%" text-anchor="middle">no one stands alone</textPath></text>
+    <circle cx="36" cy="27" r="9" fill="url(#${id}s)"/>
+    <g transform="translate(32 33) scale(0.42) translate(-32 -34)"><path d="${CASTLE}" style="fill:var(--ink)"/><path d="${GATE}" style="fill:var(--hearth)"/></g>
+  </svg>`;
+}
+function logoEngraved() {
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">
+    <g fill="none" style="stroke:var(--hearth)" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="46" cy="16" r="5" stroke-width="1"/>
+      <path d="${CASTLE}" stroke-width="1.5"/>
+      <path d="${GATE}" stroke-width="1.5"/>
+      <path d="M30.5 24h3v5h-3z M15 31h2v3h-2z M47 30h2v3h-2z" stroke-width="0.9"/>
+      <path d="M2 59Q32 53 62 59" stroke-width="1.5"/>
+      <path d="M8 62.5H26 M36 63.5H56" stroke-width="0.8" opacity="0.6"/>
+    </g>
+  </svg>`;
+}
+const LOGO_IDEAS = [
+  ["A", "Castle at dawn", "The castle's pointed turrets in deep silhouette, with the sun rising behind them and a warm light in the gate and windows. The closest match to your photo.", logoDawn],
+  ["B", "The open gate", "The stone gatehouse from the photo, its wooden doors opening onto firelight. It keeps the welcome of your current logo, drawn the way the real gate looks.", logoGate],
+  ["C", "The seal", "A round crest, like a family seal, with the turreted castle at its center, “Frankie's Fortress” around the top and “no one stands alone” below. Best for hoodies and printed items; the words get small in the header.", logoSeal],
+  ["D", "Engraved in gold", "The turreted castle drawn in fine amber lines, with drifting mist and a small sun. Light, elegant and quiet.", logoEngraved],
+];
+$("logo-options").innerHTML = LOGO_IDEAS.map(([letter, name, about, draw]) => `
+  <div class="sheet">
+    <span class="label">Option ${letter}</span>
+    <h3>${name}</h3>
+    <p class="small muted">${about}</p>
+    <div class="logo-row">
+      <div class="logo-tile"><div class="big">${draw()}</div><span class="small muted">Light</span></div>
+      <div class="logo-tile dark-sample"><div class="big">${draw()}</div><span class="small" style="color:var(--muted)">Dark</span></div>
+    </div>
+    <div class="logo-tile" style="align-items:flex-start">
+      <span class="small muted">In the header</span>
+      <div class="logo-head"><span class="sm">${draw()}</span><span class="wm"><span class="wm-top">Frankie's</span><span class="wm-bot">Fortress</span></span></div>
+    </div>
+  </div>`).join("");
 
 /* ---------- header menu ---------- */
 function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
