@@ -190,9 +190,9 @@ ul.tight { margin: 0; padding: 0; list-style: none; display: flex; flex-directio
 /* Turret bullets: a small amber tower with a pointed roof, window and arched door, echoing the castle logo */
 ul.tight li, .lessons li { position: relative; padding-left: 28px; }
 ul.tight li::before, .lessons li::before {
-  content: ""; position: absolute; left: 3px; top: 0.12em; width: 15px; height: 18px;
+  content: ""; position: absolute; left: 3px; top: var(--bt, 0.12em); width: var(--bw, 15px); height: var(--bh, 18px);
   background: var(--hearth);
-  -webkit-mask: var(--turret) center / contain no-repeat; mask: var(--turret) center / contain no-repeat;
+  -webkit-mask: var(--bullet, var(--turret)) center / contain no-repeat; mask: var(--bullet, var(--turret)) center / contain no-repeat;
 }
 :root { --turret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 18'%3E%3Cpath fill-rule='evenodd' d='M8 0.5L12.8 6.6H11.6V17.5H4.4V6.6H3.2Z M6.6 17.5V14.4A1.4 1.4 0 0 1 9.4 14.4V17.5Z M7.25 8.4H8.75V10.8H7.25Z'/%3E%3C/svg%3E"); }
 
@@ -223,6 +223,26 @@ ul.tight li::before, .lessons li::before {
   padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)); }
 .modal .sheet { width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; }
 
+/* Bullet point options (for comparing on the logo ideas page) */
+.b-flame { --bullet: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.2 0.6C9.4 3.6 13.6 5.8 13.6 10.2A5.6 5.6 0 0 1 2.4 10.2C2.4 7.6 4.1 6 5.2 4.7C5.4 6.6 6.3 7.7 7.4 8.1C6.9 5.3 7.3 2.7 8.2 0.6Z M8 14.6A2.5 2.5 0 0 1 5.5 12.1C5.5 10.6 6.6 9.8 7.3 8.7C7.7 10 8.7 10.4 9.4 11.1C10.1 11.8 10.5 12.3 10.5 12.4A2.5 2.5 0 0 1 8 14.6Z'/%3E%3C/svg%3E"); --bw: 17px; --bh: 17px; --bt: 0.18em; }
+.b-gate { --bullet: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z M5.6 15.2V9.8A2.4 2.4 0 0 1 10.4 9.8V15.2Z'/%3E%3C/svg%3E"); --bw: 16px; --bh: 16px; --bt: 0.2em; }
+.b-sun { --bullet: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.7'/%3E%3Cpath d='M8 0.9V3 M8 13V15.1 M0.9 8H3 M13 8H15.1 M3 3L4.5 4.5 M11.5 11.5L13 13 M3 13L4.5 11.5 M11.5 4.5L13 3' stroke='black' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E"); --bw: 17px; --bh: 17px; --bt: 0.18em; }
+/* Two-color gate bullets: drawn as images instead of a single-color shape, with a lighter stone in dark mode */
+ul.tight.b-gate-flame li::before { -webkit-mask: none; mask: none; background: var(--gb) center / contain no-repeat; width: 17px; height: 17px; top: 0.18em; }
+/* The site's bullet: the glowing gate (every list without a b- option class) */
+ul.tight:not([class*="b-"]) li::before, ul.tight.b-gate-glow li::before, .lessons li::before { -webkit-mask: none; mask: none; background: var(--gb-glow) center / contain no-repeat; width: 17px; height: 17px; top: 0.18em; }
+.b-turret { --bullet: var(--turret); }
+.b-gate-flame { --gb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%237A6A58'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='%233A2412'/%3E%3Cpath d='M8 15C6.6 15 5.9 14 5.9 13C5.9 11.7 7 11.1 7.6 9.9C8 11 9 11.4 9.6 12.1C10.1 12.7 10.1 13.1 10.1 13.2C10.1 14.2 9.3 15 8 15Z' fill='%23F39A3A'/%3E%3Cpath d='M8 15C7.3 15 6.9 14.5 6.9 13.9C6.9 13.1 7.6 12.8 7.9 12.1C8.2 12.8 9.1 13.2 9.1 13.9C9.1 14.5 8.7 15 8 15Z' fill='%23FFE29A'/%3E%3C/svg%3E"); }
+:root { --gb-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='85%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23FFF1C2'/%3E%3Cstop offset='0.5' stop-color='%23F5A04A'/%3E%3Cstop offset='1' stop-color='%23B4531B'/%3E%3C/radialGradient%3E%3CradialGradient id='h' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0' stop-color='%23F5A04A' stop-opacity='0.6'/%3E%3Cstop offset='1' stop-color='%23F5A04A' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%237A6A58'/%3E%3Ccircle cx='8' cy='12.6' r='6.4' fill='url(%23h)'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='url(%23g)'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .b-gate-flame { --gb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%23CDBFAB'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='%233A2412'/%3E%3Cpath d='M8 15C6.6 15 5.9 14 5.9 13C5.9 11.7 7 11.1 7.6 9.9C8 11 9 11.4 9.6 12.1C10.1 12.7 10.1 13.1 10.1 13.2C10.1 14.2 9.3 15 8 15Z' fill='%23F39A3A'/%3E%3Cpath d='M8 15C7.3 15 6.9 14.5 6.9 13.9C6.9 13.1 7.6 12.8 7.9 12.1C8.2 12.8 9.1 13.2 9.1 13.9C9.1 14.5 8.7 15 8 15Z' fill='%23FFE29A'/%3E%3C/svg%3E"); }
+  :root:not([data-theme="light"]) { --gb-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='85%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23FFF1C2'/%3E%3Cstop offset='0.5' stop-color='%23F5A04A'/%3E%3Cstop offset='1' stop-color='%23B4531B'/%3E%3C/radialGradient%3E%3CradialGradient id='h' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0' stop-color='%23F5A04A' stop-opacity='0.6'/%3E%3Cstop offset='1' stop-color='%23F5A04A' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%23CDBFAB'/%3E%3Ccircle cx='8' cy='12.6' r='6.4' fill='url(%23h)'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='url(%23g)'/%3E%3C/svg%3E"); }
+}
+:root[data-theme="dark"] .b-gate-flame { --gb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%23CDBFAB'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='%233A2412'/%3E%3Cpath d='M8 15C6.6 15 5.9 14 5.9 13C5.9 11.7 7 11.1 7.6 9.9C8 11 9 11.4 9.6 12.1C10.1 12.7 10.1 13.1 10.1 13.2C10.1 14.2 9.3 15 8 15Z' fill='%23F39A3A'/%3E%3Cpath d='M8 15C7.3 15 6.9 14.5 6.9 13.9C6.9 13.1 7.6 12.8 7.9 12.1C8.2 12.8 9.1 13.2 9.1 13.9C9.1 14.5 8.7 15 8 15Z' fill='%23FFE29A'/%3E%3C/svg%3E"); }
+:root[data-theme="dark"] { --gb-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='85%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23FFF1C2'/%3E%3Cstop offset='0.5' stop-color='%23F5A04A'/%3E%3Cstop offset='1' stop-color='%23B4531B'/%3E%3C/radialGradient%3E%3CradialGradient id='h' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0' stop-color='%23F5A04A' stop-opacity='0.6'/%3E%3Cstop offset='1' stop-color='%23F5A04A' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M1 15.2V4.4H3.4V2H6V4.4H10V2H12.6V4.4H15V15.2Z' fill='%23CDBFAB'/%3E%3Ccircle cx='8' cy='12.6' r='6.4' fill='url(%23h)'/%3E%3Cpath d='M5.4 15.2V9.8A2.6 2.6 0 0 1 10.6 9.8V15.2Z' fill='url(%23g)'/%3E%3C/svg%3E"); }
+.bullet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bullet-grid > * { min-width: 0; }
+@media (max-width: 480px) { .bullet-grid { grid-template-columns: 1fr; } }
 /* Logo ideas page */
 .logo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .logo-row > * { min-width: 0; }
@@ -720,6 +740,19 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
     <div class="stack" style="gap:6px">
       <h2>Logo ideas</h2>
       <p class="muted">Four directions inspired by the castle photo: its pointed turrets, misty sunrise and arched gate. Each is shown large, as it would look in the header, and on a dark background.</p>
+    </div>
+    <div class="sheet">
+      <span class="label">Bullet points</span>
+      <h3>Choose a bullet shape</h3>
+      <p class="small muted">Each shape shown beside real lines from the home page, so you can see how it sits next to text.</p>
+      <div class="bullet-grid">
+        <div class="logo-tile" style="align-items:flex-start"><strong>1. Cozy flame</strong><ul class="tight b-flame"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+        <div class="logo-tile" style="align-items:flex-start"><strong>2. Tiny castle gate</strong><ul class="tight b-gate"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+        <div class="logo-tile" style="align-items:flex-start"><strong>3. Little sun</strong><ul class="tight b-sun"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+        <div class="logo-tile" style="align-items:flex-start"><strong>5. Gate with a flame</strong><ul class="tight b-gate-flame"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+        <div class="logo-tile" style="align-items:flex-start"><strong>6. Glowing gate (current)</strong><ul class="tight b-gate-glow"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+        <div class="logo-tile" style="align-items:flex-start"><strong>4. Turret</strong><ul class="tight b-turret"><li><strong>No explanation needed.</strong> There's no place to describe what happened.</li><li><strong>Private link</strong>, with an optional passcode.</li><li>Reach out first, and keep reaching out</li></ul></div>
+      </div>
     </div>
     <div class="sheet">
       <span class="label">Hoodie back</span>
