@@ -280,6 +280,13 @@ ul.tight:not([class*="b-"]) li::before, ul.tight.b-gate-glow li::before, .lesson
 .candle-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
 .candle-count { font-family: var(--display); font-size: 1.25rem; }
 @media (prefers-reduced-motion: reduce) { .candle-photo img { transition: none; } }
+/* Send a gift card */
+.gift-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.gift-grid > * { min-width: 0; }
+.gift-btn { display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); text-decoration: none; }
+.gift-btn:hover, .gift-btn:focus-visible { border-color: var(--hearth); }
+.gb-name { font-weight: 700; font-size: 1.05rem; color: var(--hearth-ink); }
+.gb-sub { font-size: 0.85rem; color: var(--muted); }
 .finding { display: flex; flex-direction: column; gap: 8px; }
 .finding .try { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; }
 .finding .src { font-size: 0.8rem; color: var(--muted); }
@@ -456,6 +463,10 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
       </div>
       <div class="field"><label for="c-organizer">Organizer's name <span class="muted small">(optional)</span></label>
         <input type="text" id="c-organizer" placeholder="For example: Dana, a family friend">
+      </div>
+      <div class="field"><label for="c-giftemail">Email for gift cards <span class="muted small">(optional)</span></label>
+        <input type="text" id="c-giftemail" inputmode="email" autocomplete="email" placeholder="For example: dana@example.com">
+        <span class="small muted">Friends send e-gift cards here, and you pass them on to the family. It's shown only to people with this Fortress's private link.</span>
       </div>
     </div>
 
@@ -827,7 +838,7 @@ const exampleFortress = (season) => ({
   message: TEMPLATES[season][season === "loss" ? 1 : 0],
   helps: ["meals", "rides", "groceries", "pets", "company", "texts", "giftcards", "prayer"],
   noContact: true, dropoff: "Cooler on the front porch. Please don't knock.", passcode: true, showNames: false,
-  address: "412 Example Lane",
+  address: "412 Example Lane", giftEmail: "dana@example.com",
 });
 const EX_HELPERS = ["Jen M.", "Carlos", "The Parkers", "Aunt Rosa"];
 function makeSlots(helps) {
@@ -893,8 +904,21 @@ function renderFortress() {
   if (F.helps.includes("texts")) og.push(`<div class="sheet"><h3>Send a check-in text</h3>
     <p class="small muted">Text the family directly, or the organizer if you don't have their number. Choose words that need no reply.</p>
     ${TEXT_IDEAS[F.season].map((t, i) => `<div class="copyable"><span>${esc(t)}</span><button class="ghost" data-copy="${i}">Copy</button></div>`).join("")}</div>`);
-  if (F.helps.includes("giftcards")) og.push(`<div class="sheet"><h3>Gift cards</h3>
-    <p>Grocery stores, gas stations and food delivery help most. ${F.organizer ? `Send them to ${esc(F.organizer.split(",")[0])}, who will pass them along quietly.` : "The organizer will pass them along quietly."}</p></div>`);
+  if (F.helps.includes("giftcards")) {
+    const who = F.organizer ? esc(F.organizer.split(",")[0]) : "the organizer";
+    og.push(`<div class="sheet">
+      <h3>Send a gift card</h3>
+      <p>A meal they don't have to cook is one of the kindest gifts. Choose a service below, buy an e-gift card on its website, and send it to ${who}, who will pass it along quietly.</p>
+      ${F.giftEmail
+        ? `<div class="copyable"><span><span class="small muted">Send the gift card to</span><br><strong>${esc(F.giftEmail)}</strong></span><button class="ghost" data-copy-email>Copy</button></div>`
+        : `<p class="small muted">Ask ${who} for the email address to send it to.</p>`}
+      <div class="gift-grid">
+        <a class="gift-btn" href="https://www.doordash.com/gift-cards/" target="_blank" rel="noopener"><span class="gb-name">DoorDash ›</span><span class="gb-sub">Meals from local restaurants</span></a>
+        <a class="gift-btn" href="https://www.grubhub.com/giftcards" target="_blank" rel="noopener"><span class="gb-name">Grubhub ›</span><span class="gb-sub">Takeout and delivery</span></a>
+      </div>
+      <p class="small muted">You'll buy the card on the company's own website. Frankie's Fortress never handles payments. When it asks for the recipient's email, use the address above.</p>
+    </div>`);
+  }
   if (F.helps.includes("prayer")) og.push(`<div class="sheet"><h3>Prayer</h3>
     <p>${prayers} ${prayers === 1 ? "person is" : "people are"} holding this family in prayer.</p>
     <div class="row"><button class="${prayed ? "ghost" : ""}" id="pray" ${prayed ? "disabled" : ""}>${prayed ? "You're praying for them" : "I'm praying for them"}</button></div></div>`);
@@ -925,6 +949,12 @@ $("f-banner").addEventListener("click", (e) => {
 $("f-slots").addEventListener("click", (e) => { const id = e.target.dataset.slot; if (id) openSignup(slots.find((s) => s.id === id)); });
 $("f-ongoing").addEventListener("click", (e) => {
   if (e.target.id === "pray") { prayers++; prayed = true; renderFortress(); return; }
+  if (e.target.dataset.copyEmail !== undefined) {
+    const b = e.target;
+    navigator.clipboard.writeText(F.giftEmail).then(() => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); })
+      .catch(() => { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); });
+    return;
+  }
   const i = e.target.dataset.copy; if (i == null) return;
   const b = e.target, text = TEXT_IDEAS[F.season][+i];
   navigator.clipboard.writeText(text).then(() => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); })
@@ -1043,6 +1073,7 @@ function buildPreview() {
   const pf = {
     example: false, season,
     family: $("c-family").value.trim().slice(0, 60), organizer: $("c-organizer").value.trim().slice(0, 60),
+    giftEmail: $("c-giftemail").value.trim().slice(0, 120),
     message: tpl === "custom" ? $("c-custom").value.trim().slice(0, 400) : TEMPLATES[season][+tpl],
     helps: [...selectedHelps], noContact: $("c-nocontact").checked, dropoff: $("c-dropoff").value.trim().slice(0, 200),
     passcode: $("c-passcode").checked, showNames: $("c-names").checked, address: "",
@@ -1149,7 +1180,7 @@ function saveDraft() {
     role: document.querySelector('input[name="c-role"]:checked')?.value,
     season: document.querySelector('input[name="c-season"]:checked')?.value,
     tpl: document.querySelector('input[name="c-tpl"]:checked')?.value,
-    family: $("c-family").value, organizer: $("c-organizer").value, custom: $("c-custom").value,
+    family: $("c-family").value, organizer: $("c-organizer").value, custom: $("c-custom").value, giftemail: $("c-giftemail").value,
     helps: [...selectedHelps], nocontact: $("c-nocontact").checked, dropoff: $("c-dropoff").value,
     passcode: $("c-passcode").checked, names: $("c-names").checked, needs,
   };
@@ -1166,7 +1197,7 @@ const saveDraftSoon = () => { clearTimeout(draftTimer); draftTimer = setTimeout(
   check("c-role", d.role); check("c-season", d.season);
   // Older drafts may still hold the sample text that used to be pre-filled; leave those boxes empty.
   const oldSamples = ["The Rivera family", "Dana, a family friend", "Cooler on the front porch. Please don't knock."];
-  ["family", "organizer", "custom", "dropoff"].forEach((k) => { if (typeof d[k] === "string" && !oldSamples.includes(d[k])) $("c-" + k).value = d[k]; });
+  ["family", "organizer", "custom", "dropoff", "giftemail"].forEach((k) => { if (typeof d[k] === "string" && !oldSamples.includes(d[k])) $("c-" + k).value = d[k]; });
   $("c-nocontact").checked = !!d.nocontact; $("c-passcode").checked = !!d.passcode; $("c-names").checked = !!d.names;
   if (Array.isArray(d.helps)) {
     selectedHelps.clear(); d.helps.forEach((h) => HELP[h] && selectedHelps.add(h));
