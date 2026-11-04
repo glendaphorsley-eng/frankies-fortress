@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1200" height="1200">
+  <defs>
+    <path id="a" d="M9 32A23 23 0 0 1 55 32"/><path id="b" d="M12 34A20 20 0 0 0 52 34"/>
+    <radialGradient id="s"><stop offset="0" stop-color="#E79C4E" stop-opacity="0.8"/><stop offset="1" stop-color="#E79C4E" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30.5" fill="none" stroke="#E79C4E" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#E79C4E" stroke-width="0.8" opacity="0.7"/>
+  <text font-family="Newsreader, Georgia, serif" font-size="4.6" font-weight="600" letter-spacing="0.7" fill="#F3EDE3"><textPath href="#a" startOffset="50%" text-anchor="middle">FRANKIE'S FORTRESS</textPath></text>
+  <text font-family="Newsreader, Georgia, serif" font-size="4" font-style="italic" fill="#F0B26B"><textPath href="#b" startOffset="50%" text-anchor="middle">no one stands alone</textPath></text>
+  <circle cx="36" cy="27.5" r="7.5" fill="#E79C4E"/>
+  <g transform="translate(32 33) scale(0.42) translate(-32 -34)"><path d="M8 56V40H12V28L16 18L20 28V36H24V20L32 6L40 20V34H44V26L48 15L52 26V40H56V56Z" fill="#F3EDE3"/><path d="M28 56V48A4 4 0 0 1 36 48V56Z" fill="#E79C4E"/></g>
+</svg>

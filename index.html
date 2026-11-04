@@ -54,7 +54,7 @@ a { color: var(--accent); }
 /* Site header: emblem + wordmark on the left, main action and menu on the right */
 .site-head { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
-.mark svg { width: 40px; height: 46px; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); }
+.mark svg { width: 46px; height: 46px; display: block; overflow: visible; }
 .wm { display: flex; flex-direction: column; line-height: 1; }
 .wm-top { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 1.6rem; letter-spacing: -0.01em; }
 .wm-bot { font-family: var(--display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.34em; text-transform: uppercase; color: var(--hearth-ink); margin-top: 3px; padding-left: 2px; }
@@ -668,27 +668,6 @@ footer { text-align: center; font-size: 0.85rem; color: var(--muted); }
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-// Emblem: a stone shield with battlements and a firelit arched doorway.
-function brandMark() {
-  const shield = "M3 9H7.5V4H13V9H17.2V4H22.8V9H27V4H32.5V9H37V25C37 35 29.5 41.5 20 45C10.5 41.5 3 35 3 25Z";
-  const joints = [[14, 3, 37], [20, 3, 37], [26, 3, 37], [32, 4, 36], [38, 8, 32]]
-    .map(([y, x0, x1]) => `<path d="M${x0} ${y}H${x1}" />`).join("")
-    + [[10, 9, 14], [27, 9, 14], [16, 14, 20], [31, 14, 20], [11, 20, 26], [24, 20, 26], [29, 20, 26], [17, 26, 32], [33, 26, 32]]
-    .map(([x, y0, y1]) => `<path d="M${x} ${y0}V${y1}" />`).join("");
-  return `<svg viewBox="0 0 40 46" aria-hidden="true">
-    <defs>
-      <linearGradient id="emb-stone" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#c9bda9"/><stop offset="0.6" stop-color="#a39581"/><stop offset="1" stop-color="#7d705f"/></linearGradient>
-      <radialGradient id="emb-fire" cx="50%" cy="88%" r="75%"><stop offset="0" stop-color="#fff0c0"/><stop offset="0.4" stop-color="#f29a3e"/><stop offset="1" stop-color="#7a3010"/></radialGradient>
-      <clipPath id="emb-clip"><path d="${shield}"/></clipPath>
-    </defs>
-    <path d="${shield}" fill="url(#emb-stone)"/>
-    <g clip-path="url(#emb-clip)" stroke="rgba(55,44,34,0.5)" stroke-width="0.8" fill="none">${joints}</g>
-    <path d="M14.5 41V30.5A5.5 5.5 0 0 1 25.5 30.5V41Z" fill="url(#emb-fire)" stroke="#3a2a1c" stroke-width="1"/>
-    <path d="M17 41C17 37.5 19 36.5 20 34C21 36.5 23 37.5 23 41Z" fill="#fff4cc" opacity="0.85"/>
-    <path d="${shield}" fill="none" style="stroke:var(--hearth)" stroke-width="1.6" stroke-linejoin="round"/>
-  </svg>`;
-}
-document.querySelectorAll(".mark").forEach((el) => (el.innerHTML = brandMark()));
 
 /* ---------- content ---------- */
 const HELP = {
@@ -1217,6 +1196,9 @@ $("logo-options").innerHTML = LOGO_IDEAS.map(([letter, name, about, draw]) => `
       <div class="logo-head"><span class="sm">${draw()}</span><span class="wm"><span class="wm-top">Frankie's</span><span class="wm-bot">Fortress</span></span></div>
     </div>
   </div>`).join("");
+
+// Header emblem: the castle at dawn (logo option A), matching the castle photo.
+document.querySelectorAll(".mark").forEach((el) => (el.innerHTML = logoDawn()));
 
 /* ---------- header menu ---------- */
 function setMenu(open) { $("menu").hidden = !open; $("menu-btn").setAttribute("aria-expanded", open); }
